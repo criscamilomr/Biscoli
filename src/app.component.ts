@@ -48,7 +48,9 @@ import { NotFoundComponent } from './components/not-found.component';
       [class.backdrop-blur-md]="scrolled() || mobileMenuOpen()"
       [class.shadow-md]="scrolled() || mobileMenuOpen()"
       [class.py-2]="scrolled()"
-      [class.py-8]="!scrolled()">
+      [class.py-8]="!scrolled()"
+      [class.opacity-0]="store.modalOpen()"
+      [class.pointer-events-none]="store.modalOpen()">
       
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center">

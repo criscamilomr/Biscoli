@@ -267,10 +267,12 @@ export class HomeComponent {
 
   openModal(flavor: Flavor) {
     this.selectedFlavor.set(flavor);
+    this.store.modalOpen.set(true);
   }
 
   closeModal() {
     this.selectedFlavor.set(null);
+    this.store.modalOpen.set(false);
   }
 
   addFlavorToBoxAndClose(flavor: Flavor, qty: number = 1) {

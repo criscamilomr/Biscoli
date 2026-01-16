@@ -27,6 +27,7 @@ export type ViewState = 'HOME' | 'BUILDER' | 'CHECKOUT' | 'SUCCESS' | 'INGREDIEN
 export class StoreService {
   // State
   readonly currentView = signal<ViewState>('HOME');
+  readonly modalOpen = signal<boolean>(false);
   readonly selectedBoxSize = signal<number>(0);
   readonly cart = signal<BoxItem[]>([]);
   readonly currentBuilderFlavors = signal<Flavor[]>([]);
