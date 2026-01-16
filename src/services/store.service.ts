@@ -92,7 +92,6 @@ export class StoreService {
   // Actions
   setView(view: ViewState) {
     this.currentView.set(view);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   startBuildingBox(size: number) {

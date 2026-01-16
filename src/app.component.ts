@@ -35,7 +35,7 @@ import { NotFoundComponent } from './components/not-found.component';
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('0.5s cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
+        animate('0.8s cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
       ])
     ])
   ],
@@ -161,6 +161,16 @@ export class AppComponent {
         if (count > 0) {
           this.cartBump.set(true);
           setTimeout(() => this.cartBump.set(false), 300);
+        }
+      });
+    });
+
+    // Scroll to top on view change
+    effect(() => {
+      const view = this.store.currentView();
+      untracked(() => {
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'auto' });
         }
       });
     });
