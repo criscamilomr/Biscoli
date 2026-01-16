@@ -1,0 +1,129 @@
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { StoreService } from '../services/store.service';
+
+@Component({
+  selector: 'app-ingredients-view',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="min-h-screen pt-24 pb-32 px-4 max-w-6xl mx-auto font-sans">
+      
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <h2 class="text-5xl md:text-7xl font-black text-brown-900 mb-6 tracking-tight">Nuestros Ingredientes</h2>
+        <p class="text-xl text-brown-900/80 max-w-2xl mx-auto leading-relaxed font-medium">
+          Creemos que el sabor real comienza con ingredientes reales. <br>
+          <span class="font-black text-amber-600 text-2xl mt-2 block">Sin gluten. Sin azúcar. 100% Placer.</span>
+        </p>
+      </div>
+
+      <!-- Main Ingredients Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-24">
+        
+        <!-- Harina de Almendra -->
+        <div class="bg-white rounded-[2rem] p-10 shadow-xl border border-amber-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-amber-50 rounded-bl-[4rem] -mr-10 -mt-10 opacity-50 text-7xl flex items-center justify-center pt-10 pr-10">🌰</div>
+          <h3 class="text-4xl font-black text-brown-900 mb-4 relative z-10 tracking-tight">Harina de Almendra</h3>
+          <p class="text-brown-800 text-lg mb-8 relative z-10 font-medium leading-relaxed">La base de nuestra magia. Aporta una textura húmeda y suave que se deshace en la boca, sin la pesadez del gluten.</p>
+          
+          <ul class="space-y-4 relative z-10">
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Rica en proteínas y grasas saludables</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Bajo índice glucémico</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Aporta Vitamina E antioxidante</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Alulosa -->
+        <div class="bg-white rounded-[2rem] p-10 shadow-xl border border-amber-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-green-50 rounded-bl-[4rem] -mr-10 -mt-10 opacity-50 text-7xl flex items-center justify-center pt-10 pr-10">🌾</div>
+          <h3 class="text-4xl font-black text-brown-900 mb-4 relative z-10 tracking-tight">Alulosa</h3>
+          <p class="text-brown-800 text-lg mb-8 relative z-10 font-medium leading-relaxed">Un endulzante revolucionario que se encuentra naturalmente en higos y pasas. Sabe igual que el azúcar pero sin sus calorías.</p>
+          
+          <ul class="space-y-4 relative z-10">
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Sabor idéntico al azúcar, sin resabios</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">No impacta la glucosa en sangre</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">100% Keto Friendly</span>
+            </li>
+          </ul>
+        </div>
+
+         <!-- Aceite de Coco -->
+         <div class="bg-white rounded-[2rem] p-10 shadow-xl border border-amber-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-50 rounded-bl-[4rem] -mr-10 -mt-10 opacity-50 text-7xl flex items-center justify-center pt-10 pr-10">🥥</div>
+          <h3 class="text-4xl font-black text-brown-900 mb-4 relative z-10 tracking-tight">Aceite de Coco</h3>
+          <p class="text-brown-800 text-lg mb-8 relative z-10 font-medium leading-relaxed">Sustituimos la mantequilla por grasas vegetales de calidad premium para un bocado untuoso.</p>
+          
+          <ul class="space-y-4 relative z-10">
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Triglicéridos de cadena media (energía rápida)</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Propiedades antimicrobianas</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Harina de Avena -->
+        <div class="bg-white rounded-[2rem] p-10 shadow-xl border border-amber-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-50 rounded-bl-[4rem] -mr-10 -mt-10 opacity-50 text-7xl flex items-center justify-center pt-10 pr-10">🥣</div>
+          <h3 class="text-4xl font-black text-brown-900 mb-4 relative z-10 tracking-tight">Harina de avena CGF</h3>
+          <p class="text-brown-800 text-lg mb-8 relative z-10 font-medium leading-relaxed">Avena Certificada Gluten Free. Aporta fibra soluble y una textura increíblemente tierna a nuestras galletas.</p>
+          
+          <ul class="space-y-4 relative z-10">
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Fuente natural de fibra y betaglucanos</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Digestión lenta y energía sostenida</span>
+            </li>
+             <li class="flex items-center gap-4">
+              <span class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">✓</span>
+              <span class="text-gray-700 font-medium text-lg">Certificada libre de trazas de gluten</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Call to Action -->
+      <div class="bg-brown-900 rounded-[3rem] p-16 text-center text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        
+        <h3 class="text-4xl md:text-5xl font-black mb-8 relative z-10 tracking-tight">¿Listo para probar lo saludable?</h3>
+        <p class="text-amber-100/90 mb-10 max-w-2xl mx-auto relative z-10 text-xl font-medium leading-relaxed">No tienes que sacrificar el sabor para cuidar tu cuerpo. Nuestras cookies son la prueba.</p>
+        
+        <button (click)="store.setView('HOME')" class="bg-amber-500 text-brown-900 px-10 py-5 rounded-full font-black text-xl shadow-xl hover:bg-amber-400 hover:scale-105 transition-transform relative z-10 uppercase tracking-wide">
+          Volver a Pedir
+        </button>
+      </div>
+
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IngredientsViewComponent {
+  store = inject(StoreService);
+}
