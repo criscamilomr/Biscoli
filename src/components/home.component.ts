@@ -22,7 +22,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
     }
 
     <!-- Hero Section -->
-    <section id="inicio" class="relative min-h-[45vh] flex flex-col items-center justify-center text-center p-6 pb-6 pt-10">
+    <section id="inicio" class="relative min-h-[45vh] flex flex-col items-center justify-center text-center p-6 pb-6 pt-32 md:pt-40">
       
       <!-- Logo Container -->
       <div class="relative w-72 h-32 md:w-96 md:h-48 mb-4 animate-bounce-slow">

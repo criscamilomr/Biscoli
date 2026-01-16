@@ -44,11 +44,11 @@ import { NotFoundComponent } from './components/not-found.component';
     
     <!-- Functional Topbar -->
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      [class.bg-white_95]="scrolled()"
-      [class.backdrop-blur-md]="scrolled()"
-      [class.shadow-md]="scrolled()"
+      [class.bg-white_95]="scrolled() || mobileMenuOpen()"
+      [class.backdrop-blur-md]="scrolled() || mobileMenuOpen()"
+      [class.shadow-md]="scrolled() || mobileMenuOpen()"
       [class.py-2]="scrolled()"
-      [class.py-4]="!scrolled()">
+      [class.py-8]="!scrolled()">
       
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center">
@@ -80,7 +80,7 @@ import { NotFoundComponent } from './components/not-found.component';
             </button>
 
             <!-- Mobile Menu Button -->
-            <button (click)="toggleMenu()" class="md:hidden text-[#3E2723] p-2 focus:outline-none">
+            <button (click)="toggleMenu()" class="md:hidden text-[#3E2723] p-2 focus:outline-none transition-transform active:scale-90">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 @if (mobileMenuOpen()) {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -95,18 +95,18 @@ import { NotFoundComponent } from './components/not-found.component';
 
       <!-- Mobile Dropdown Menu -->
       <div 
-        class="absolute top-full left-0 w-full bg-white shadow-xl transition-all duration-300 overflow-hidden md:hidden flex flex-col items-center gap-6"
-        [class.h-0]="!mobileMenuOpen()"
-        [class.h-screen]="mobileMenuOpen()"
+        class="absolute top-full left-0 w-full bg-white_95 backdrop-blur-md shadow-2xl transition-all duration-300 ease-in-out overflow-hidden md:hidden flex flex-col items-center gap-2 rounded-b-[2.5rem] border-t border-gray-100"
+        [class.max-h-0]="!mobileMenuOpen()"
+        [class.max-h-[500px]]="mobileMenuOpen()"
         [class.opacity-0]="!mobileMenuOpen()"
         [class.opacity-100]="mobileMenuOpen()"
         [class.py-0]="!mobileMenuOpen()"
-        [class.py-12]="mobileMenuOpen()"
+        [class.py-8]="mobileMenuOpen()"
       >
-        <button (click)="navigate('inicio')" class="text-xl text-[#3E2723] font-bold">INICIO</button>
-        <button (click)="navigate('cajas')" class="text-xl text-[#3E2723] font-bold">CAJAS</button>
-        <button (click)="navigate('ingredientes')" class="text-xl text-[#3E2723] font-bold">INGREDIENTES</button>
-        <button (click)="navigate('faq')" class="text-xl text-[#3E2723] font-bold">FAQ</button>
+        <button (click)="navigate('inicio')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Inicio</button>
+        <button (click)="navigate('cajas')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Arma tu Caja</button>
+        <button (click)="navigate('ingredientes')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Ingredientes</button>
+        <button (click)="navigate('faq')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">FAQ</button>
       </div>
     </header>
 
