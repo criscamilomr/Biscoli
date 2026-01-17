@@ -19,6 +19,7 @@ export const APP_IMAGES = {
   chocochip: 'assets/choco-clasica.jpg',
   redvelvet: 'assets/cookie-flavor.jpg',
   macadamia: 'assets/cookie-flavor.jpg',
+  carrotcake: 'assets/carrot-cake.jpg',
   doublechoc: 'assets/cookie-flavor.jpg',
   blueberry: 'assets/cookie-flavor.jpg',
   matcha: 'assets/cookie-flavor.jpg',

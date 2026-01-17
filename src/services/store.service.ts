@@ -51,12 +51,12 @@ export class StoreService {
       ingredients: ['Harina de almendra', 'Cacao en polvo', 'Remolacha en polvo (color natural)', 'Alulosa', 'Chips de chocolate blanco vegano', 'Aceite de coco']
     },
     {
-      id: 'macadamia',
-      name: 'Macadamia White',
-      description: 'Crocante macadamia con chocolate blanco vegano.',
-      color: 'bg-yellow-200',
-      image: APP_IMAGES.macadamia,
-      ingredients: ['Harina de almendra', 'Nueces de macadamia', 'Chocolate blanco vegano', 'Alulosa', 'Aceite de coco', 'Vainilla natural']
+      id: 'carrotcake',
+      name: 'Carrot Cake con queso crema ft. Krima',
+      description: 'Suave galleta de zanahoria con especias, trozos de nuez pecana y un delicioso centro de queso crema vegano Krima.',
+      color: 'bg-orange-200',
+      image: APP_IMAGES.carrotcake,
+      ingredients: ['Harina de almendra', 'Zanahoria', 'Nueces pecanas', 'Queso crema vegano (Krima)', 'Alulosa', 'Especias', 'Aceite de coco']
     },
 
   ];
