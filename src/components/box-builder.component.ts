@@ -116,8 +116,9 @@ import { StoreService } from '../services/store.service';
            <h3 class="text-3xl font-black text-brown-900 mb-6 pl-4 border-l-8 border-amber-500 tracking-tight">Nuestros Sabores</h3>
            
            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              @for (flavor of store.flavors; track flavor.id) {
-                <div class="bg-white rounded-[1.5rem] p-4 shadow-sm hover:shadow-xl transition-all border border-gray-100 flex gap-5 h-40 group relative overflow-hidden">
+              @for (flavor of store.flavors(); track flavor.id) {
+                <div class="bg-white rounded-[1.5rem] p-4 shadow-sm hover:shadow-xl transition-all border border-gray-100 flex gap-5 h-40 group relative overflow-hidden"
+                [class.grayscale]="flavor.available === false" [class.opacity-75]="flavor.available === false">
                    
                    <!-- Image Side -->
                    <div class="w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden relative self-center shadow-md">
@@ -133,6 +134,13 @@ import { StoreService } from '../services/store.service';
                           {{countInBox(flavor.id)}}
                         </div>
                      }
+
+                     <!-- OOS Badge -->
+                     @if (flavor.available === false) {
+                       <div class="absolute inset-0 bg-stone-900/60 flex items-center justify-center">
+                         <span class="text-white font-black text-xs uppercase tracking-widest border border-white/50 px-2 py-1 rounded bg-black/20 backdrop-blur-sm transform -rotate-12">Agotado</span>
+                       </div>
+                     }
                    </div>
 
                    <!-- Content Side -->
@@ -144,11 +152,15 @@ import { StoreService } from '../services/store.service';
                       <div class="mt-auto">
                         <button 
                           (click)="store.addFlavorToBox(flavor)"
-                          [disabled]="isFull()"
+                          [disabled]="isFull() || flavor.available === false"
                           class="bg-amber-100 hover:bg-amber-200 text-[#3E2723] px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed w-fit"
                         >
-                          <span>Agregar</span>
-                          <span class="text-lg leading-none">+</span>
+                          @if (flavor.available === false) {
+                            <span>No disponible</span>
+                          } @else {
+                            <span>Agregar</span>
+                            <span class="text-lg leading-none">+</span>
+                          }
                         </button>
                       </div>
                    </div>

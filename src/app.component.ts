@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, inject, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, style, animate, transition } from '@angular/animations';
@@ -13,6 +12,8 @@ import { FooterComponent } from './components/footer.component';
 import { TermsComponent } from './components/terms.component';
 import { PrivacyComponent } from './components/privacy.component';
 import { NotFoundComponent } from './components/not-found.component';
+import { AdminLoginComponent } from './components/admin/admin-login.component';
+import { AdminDashboardComponent } from './components/admin/admin-dashboard.component';
 
 
 @Component({
@@ -29,7 +30,9 @@ import { NotFoundComponent } from './components/not-found.component';
     FooterComponent,
     TermsComponent,
     PrivacyComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AdminLoginComponent,
+    AdminDashboardComponent
   ],
   animations: [
     trigger('fadeIn', [
@@ -125,10 +128,21 @@ import { NotFoundComponent } from './components/not-found.component';
         }
         @case ('TERMS') { <div @fadeIn class="w-full"><app-terms /></div> }
         @case ('PRIVACY') { <div @fadeIn class="w-full"><app-privacy /></div> }
+        @case ('ADMIN_LOGIN') { <div @fadeIn class="w-full"><app-admin-login /></div> }
+        @case ('ADMIN_DASHBOARD') { <div @fadeIn class="w-full"><app-admin-dashboard /></div> }
         @case ('NOT_FOUND') { <div @fadeIn class="w-full"><app-not-found /></div> }
       }
     </main>
-    <app-footer />
+    
+    <!-- Footer with Admin Shortcut -->
+    <div class="relative z-50">
+      <app-footer />
+      <button (click)="store.setView('ADMIN_LOGIN')" class="absolute bottom-4 right-4 p-2 text-white/30 hover:text-white hover:scale-110 transition-all cursor-pointer z-50" title="Admin Access">
+         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+           <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+         </svg>
+      </button>
+    </div>
   `,
   styles: [`
     .bg-white_95 { background-color: rgba(255, 255, 255, 0.95); }
