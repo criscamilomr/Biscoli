@@ -78,6 +78,16 @@ import { FlavorModalComponent } from './flavor-modal.component';
           <p class="text-gray-600 text-lg font-medium leading-relaxed">Endulzadas con alulosa. Disfruta sin picos de glucosa.</p>
         </div>
       </div>
+
+      <!-- Action Button -->
+      <div class="mt-12 text-center">
+        <button (click)="store.setView('INGREDIENTS')" class="inline-flex items-center gap-2 bg-white text-[#72c3fa] border-2 border-[#72c3fa] px-8 py-3 rounded-full font-black text-lg hover:bg-[#72c3fa] hover:text-white transition-all shadow-sm hover:shadow-lg transform hover:-translate-y-1">
+          <span>Ver Información Nutricional</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
     </section>
 
 
@@ -87,9 +97,17 @@ import { FlavorModalComponent } from './flavor-modal.component';
       <p class="text-center text-gray-500 mb-16 text-xl font-medium max-w-2xl mx-auto">Elige tus favoritos al armar tu caja. Diseñados para satisfacer sin comprometer tu salud.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8">
-        @for (flavor of store.flavors; track flavor.id) {
-          <div (click)="openModal(flavor)" class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col h-full cursor-pointer ring-1 ring-black/5 hover:ring-black/10">
+        @for (flavor of store.flavors(); track flavor.id) {
+          <div (click)="openModal(flavor)" class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col h-full cursor-pointer ring-1 ring-black/5 hover:ring-black/10 relative"
+          [class.grayscale]="flavor.available === false" [class.opacity-90]="flavor.available === false" [class.pointer-events-none]="flavor.available === false">
             
+             <!-- Out of Stock Overlay -->
+             @if (flavor.available === false) {
+              <div class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
+                 <div class="bg-stone-900/90 text-white px-6 py-3 rounded-xl font-black text-xl uppercase tracking-widest shadow-2xl border-2 border-white/20 transform -rotate-12 backdrop-blur-sm">Agotado</div>
+              </div>
+            }
+
             <!-- Image Area -->
             <div class="aspect-square w-full flex items-center justify-center relative overflow-hidden bg-stone-50">
               @if (flavor.image) {
@@ -116,15 +134,17 @@ import { FlavorModalComponent } from './flavor-modal.component';
                 
                 <div class="flex items-center gap-2">
                   <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                    <button (click)="decQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-brown-900 disabled:opacity-50">-</button>
+                    <button [disabled]="flavor.available === false" (click)="decQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-brown-900 disabled:opacity-50">-</button>
                     <span class="w-8 text-center font-bold text-brown-900">{{ getQty(flavor.id) }}</span>
-                    <button (click)="incQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-brown-900">+</button>
+                    <button [disabled]="flavor.available === false" (click)="incQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-brown-900 disabled:opacity-50">+</button>
                   </div>
-                  <button (click)="addFromCard(flavor, $event)" class="flex-1 bg-brown-900 text-amber-50 py-2 rounded-lg font-bold shadow-md hover:bg-black transition-all text-sm flex items-center justify-center gap-1 active:scale-95">
-                    <span>Agregar</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
+                  <button [disabled]="flavor.available === false" (click)="addFromCard(flavor, $event)" class="flex-1 bg-brown-900 text-amber-50 py-2 rounded-lg font-bold shadow-md hover:bg-black transition-all text-sm flex items-center justify-center gap-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-400">
+                    <span>{{ flavor.available === false ? 'Agotado' : 'Agregar' }}</span>
+                    @if (flavor.available !== false) {
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    }
                   </button>
                 </div>
               </div>

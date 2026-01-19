@@ -107,6 +107,50 @@ import { StoreService } from '../services/store.service';
 
       </div>
 
+      <!-- Allergen Information Section -->
+      <div class="mb-24">
+        <h3 class="text-3xl md:text-4xl font-black text-brown-900 text-center mb-10 tracking-tight">Información de Alérgenos</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- CONTAINS -->
+          <div class="bg-red-50 border border-red-100 rounded-3xl p-8 text-center hover:shadow-lg transition-shadow">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mb-4 mx-auto font-bold">⚠️</div>
+            <h4 class="text-xl font-black text-red-800 mb-2 uppercase tracking-wide">Contiene</h4>
+            <ul class="text-red-700/80 font-medium space-y-2">
+              <li class="flex items-center justify-center gap-2">
+                <span>🌰</span> Almendras (Frutos Secos)
+              </li>
+              <li class="flex items-center justify-center gap-2">
+                <span>🥥</span> Coco
+              </li>
+            </ul>
+          </div>
+
+          <!-- WARNING / TRACES -->
+          <div class="bg-amber-50 border border-amber-100 rounded-3xl p-8 text-center hover:shadow-lg transition-shadow">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mb-4 mx-auto font-bold">🏭</div>
+            <h4 class="text-xl font-black text-amber-800 mb-2 uppercase tracking-wide">Puede Contener</h4>
+            <p class="text-amber-700/80 font-medium leading-relaxed text-sm">
+              Producido en instalaciones que también procesan <strong>maní</strong> y otras <strong>nueces</strong>. Si tienes alergias severas, ten precaución.
+            </p>
+          </div>
+
+          <!-- FREE OF -->
+          <div class="bg-green-50 border border-green-100 rounded-3xl p-8 text-center hover:shadow-lg transition-shadow">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mb-4 mx-auto font-bold">✅</div>
+            <h4 class="text-xl font-black text-green-800 mb-2 uppercase tracking-wide">Libre De</h4>
+            <ul class="text-green-700/80 font-medium space-y-2">
+               <li class="flex items-center justify-center gap-2">🚫 Gluten</li>
+               <li class="flex items-center justify-center gap-2">🚫 Lácteos</li>
+               <li class="flex items-center justify-center gap-2">🚫 Huevos</li>
+               <li class="flex items-center justify-center gap-2">🚫 Azúcar Refinada</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Bottom Call to Action -->
       <div class="bg-brown-900 rounded-[3rem] p-16 text-center text-white relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>

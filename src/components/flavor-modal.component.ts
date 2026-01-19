@@ -56,28 +56,40 @@ import { Flavor, StoreService } from '../services/store.service';
             </div>
 
             <div class="mt-auto">
-              <!-- Price & Quantity Row -->
-              <div class="flex items-center justify-between mb-6">
-                 <div>
-                    <p class="text-sm text-stone-500 font-bold uppercase tracking-wider mb-1">Precio Unitario</p>
-                    <p class="text-3xl font-black text-stone-900">{{ unitPrice | currency:'$':'symbol':'1.0-0' }}</p>
+              
+              @if (flavor.available === false) {
+                 <div class="bg-stone-100 rounded-xl p-4 text-center border-2 border-stone-200 mb-4">
+                   <p class="text-stone-500 font-bold uppercase tracking-wider text-sm mb-1">Estado</p>
+                   <p class="text-2xl font-black text-stone-400">Agotado Temporalmente</p>
                  </div>
+              } @else {
+                  <!-- Price & Quantity Row -->
+                  <div class="flex items-center justify-between mb-6">
+                     <div>
+                        <p class="text-sm text-stone-500 font-bold uppercase tracking-wider mb-1">Precio Unitario</p>
+                        <p class="text-3xl font-black text-stone-900">{{ unitPrice | currency:'$':'symbol':'1.0-0' }}</p>
+                     </div>
 
-                 <div class="flex items-center bg-stone-100 rounded-full p-2 border border-stone-200">
-                    <button (click)="decrease()" class="w-10 h-10 rounded-full bg-white text-stone-900 shadow-sm flex items-center justify-center font-bold text-xl hover:bg-amber-100 transition-colors disabled:opacity-50">-</button>
-                    <span class="w-12 text-center font-black text-xl text-stone-900">{{ quantity() }}</span>
-                    <button (click)="increase()" class="w-10 h-10 rounded-full bg-stone-900 text-white shadow-sm flex items-center justify-center font-bold text-xl hover:bg-stone-800 transition-colors">+</button>
-                 </div>
-              </div>
+                     <div class="flex items-center bg-stone-100 rounded-full p-2 border border-stone-200">
+                        <button (click)="decrease()" class="w-10 h-10 rounded-full bg-white text-stone-900 shadow-sm flex items-center justify-center font-bold text-xl hover:bg-amber-100 transition-colors disabled:opacity-50">-</button>
+                        <span class="w-12 text-center font-black text-xl text-stone-900">{{ quantity() }}</span>
+                        <button (click)="increase()" class="w-10 h-10 rounded-full bg-stone-900 text-white shadow-sm flex items-center justify-center font-bold text-xl hover:bg-stone-800 transition-colors">+</button>
+                     </div>
+                  </div>
+              }
 
-              <button (click)="addToCart.emit(quantity())" class="w-full bg-amber-500 text-brown-900 py-4 px-8 rounded-full font-black text-lg hover:bg-amber-400 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-between group">
+              <button [disabled]="flavor.available === false" (click)="addToCart.emit(quantity())" class="w-full bg-amber-500 text-brown-900 py-4 px-8 rounded-full font-black text-lg hover:bg-amber-400 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300">
                 <span class="flex items-center gap-2">
-                  <span>Agregar al Carrito</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+                  <span>{{ flavor.available === false ? 'No Disponible' : 'Agregar al Carrito' }}</span>
+                  @if (flavor.available !== false) {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  }
                 </span>
-                <span class="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">{{ (unitPrice * quantity()) | currency:'$':'symbol':'1.0-0' }}</span>
+                @if (flavor.available !== false) {
+                  <span class="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">{{ (unitPrice * quantity()) | currency:'$':'symbol':'1.0-0' }}</span>
+                }
               </button>
             </div>
 
