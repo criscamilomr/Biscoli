@@ -78,6 +78,16 @@ import { FlavorModalComponent } from './flavor-modal.component';
           <p class="text-gray-600 text-lg font-medium leading-relaxed">Endulzadas con alulosa. Disfruta sin picos de glucosa.</p>
         </div>
       </div>
+
+      <!-- Action Button -->
+      <div class="mt-12 text-center">
+        <button (click)="store.setView('INGREDIENTS')" class="inline-flex items-center gap-2 bg-white text-[#72c3fa] border-2 border-[#72c3fa] px-8 py-3 rounded-full font-black text-lg hover:bg-[#72c3fa] hover:text-white transition-all shadow-sm hover:shadow-lg transform hover:-translate-y-1">
+          <span>Ver Información Nutricional</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
     </section>
 
 
