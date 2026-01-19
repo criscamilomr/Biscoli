@@ -77,40 +77,81 @@ import { StoreService } from '../services/store.service';
         </div>
 
         <!-- Checkout Form -->
-        <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100">
-          <h3 class="text-2xl font-black text-brown-900 mb-6 flex items-center gap-2">
-            <span>📦</span> Datos de Envío
-          </h3>
-          
-          <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()" class="space-y-4">
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Nombre</label>
-              <input type="text" formControlName="name" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Tu nombre">
-              @if (checkoutForm.get('name')?.touched && checkoutForm.get('name')?.invalid) {
-                <span class="text-red-500 text-xs">Requerido</span>
-              }
-            </div>
+        <!-- Checkout Form -->
+        @if (store.storeConfig().isOpen) {
+          <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100">
+            <h3 class="text-2xl font-black text-brown-900 mb-6 flex items-center gap-2">
+              <span>📦</span> Datos de Envío
+            </h3>
+            
+            <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()" class="space-y-4">
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Nombre</label>
+                <input type="text" formControlName="name" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Tu nombre">
+                @if (checkoutForm.get('name')?.touched && checkoutForm.get('name')?.invalid) {
+                  <span class="text-red-500 text-xs">Requerido</span>
+                }
+              </div>
 
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Dirección</label>
-              <input type="text" formControlName="address" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Calle 123 # 45-67">
-              @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
-                <span class="text-red-500 text-xs">Requerido</span>
-              }
-            </div>
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Teléfono</label>
+                <input type="tel" formControlName="phone" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="300 123 4567">
+                @if (checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid) {
+                  <span class="text-red-500 text-xs">Teléfono válido requerido (10 dígitos)</span>
+                }
+              </div>
 
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Notas (Opcional)</label>
-              <textarea formControlName="notes" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Ej: Dejar en portería"></textarea>
-            </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Dirección</label>
+                  <input type="text" formControlName="address" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Calle 123 # 45-67">
+                  @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
+                    <span class="text-red-500 text-xs">Requerido</span>
+                  }
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Barrio</label>
+                  <input type="text" formControlName="neighborhood" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Ej: Ciudad Jardín">
+                  @if (checkoutForm.get('neighborhood')?.touched && checkoutForm.get('neighborhood')?.invalid) {
+                    <span class="text-red-500 text-xs">Requerido</span>
+                  }
+                </div>
+              </div>
+              
+              <!-- Automatic Payment Info -->
+              <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-start gap-3">
+                <span class="text-2xl">ℹ️</span>
+                <div>
+                   <p class="font-bold text-blue-900 text-sm">Método de Pago</p>
+                   <p class="text-xs text-blue-800">Por ahora solo aceptamos transferencias. Te enviaremos los datos por WhatsApp al confirmar tu pedido.</p>
+                </div>
+              </div>
 
-            <button type="submit" [disabled]="checkoutForm.invalid" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-              <span class="text-2xl">📱</span>
-              Pedir por WhatsApp
-            </button>
-            <p class="text-xs text-center text-gray-500 mt-2">Serás redirigido a WhatsApp para enviar tu pedido.</p>
-          </form>
-        </div>
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Notas (Opcional)</label>
+                <textarea formControlName="notes" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3E2723]/50" placeholder="Ej: Dejar en portería"></textarea>
+              </div>
+
+              <button type="submit" [disabled]="checkoutForm.invalid" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                <span class="text-2xl">📱</span>
+                Pedir por WhatsApp
+              </button>
+              <p class="text-xs text-center text-gray-500 mt-2">Serás redirigido a WhatsApp para enviar tu pedido.</p>
+            </form>
+          </div>
+        } @else {
+          <!-- STORE CLOSED STATE -->
+          <div class="bg-red-50 rounded-[2rem] p-10 text-center shadow-lg border border-red-100">
+             <div class="text-7xl mb-6">🔒</div>
+             <h3 class="text-3xl font-black text-brown-900 mb-4">Tienda Cerrada</h3>
+             <p class="text-xl text-brown-800 mb-8 max-w-lg mx-auto">
+               {{ store.storeConfig().closedMessage || 'Estamos descansando. Volvemos pronto.' }}
+             </p>
+             <button (click)="store.setView('HOME')" class="bg-brown-900 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-black transition-all">
+                Volver al Menú
+             </button>
+          </div>
+        }
       }
     </div>
   `,
@@ -123,14 +164,16 @@ export class CheckoutComponent {
 
   checkoutForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
+    phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
     address: ['', Validators.required],
+    neighborhood: ['', Validators.required],
     notes: ['']
   });
 
   submitOrder() {
     if (this.checkoutForm.invalid) return;
 
-    const { name, address, notes } = this.checkoutForm.value;
+    const { name, phone, address, neighborhood, notes } = this.checkoutForm.value;
     const cart = this.store.cart();
 
     let message = `*¡Hola Biscoli! Quiero realizar el siguiente pedido:*\n\n`;
@@ -152,12 +195,17 @@ export class CheckoutComponent {
     message += `_Subtotal: $${this.store.subtotal().toLocaleString()}_\n`;
     message += `_Envío: $${this.store.shippingFee().toLocaleString()}_\n`;
     message += `*Total: $${this.store.cartTotal().toLocaleString()}*\n\n`;
+
     message += `*Datos de Entrega:*\n`;
     message += `Nombre: ${name}\n`;
+    message += `Teléfono: ${phone}\n`;
     message += `Dirección: ${address}\n`;
+    message += `Barrio: ${neighborhood}\n`;
+    message += `Método de Pago: TRANSFERENCIA (Único medio)\n`; // Hardcoded as requested
+
     if (notes) message += `Notas: ${notes}`;
 
-    const phoneNumber = '573009017621'; // Replace with real number
+    const phoneNumber = '573009017621';
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
     window.open(url, '_blank');

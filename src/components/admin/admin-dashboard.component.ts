@@ -1,12 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { StoreService } from '../../services/store.service';
 import { Auth, signOut } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="min-h-screen pt-24 pb-64 px-4 max-w-6xl mx-auto">
       
@@ -29,6 +30,52 @@ import { Auth, signOut } from '@angular/fire/auth';
              Salir
            </button>
         </div>
+      </div>
+
+      <!-- STORE STATUS CARD -->
+      <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden mb-8 p-8">
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-6">
+          <div>
+            <h3 class="text-2xl font-black text-brown-900 mb-2">Estado de la Tienda</h3>
+            <p class="text-gray-500">Controla si se pueden recibir pedidos.</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+             <span class="text-lg font-bold" [class.text-green-600]="store.storeConfig().isOpen" [class.text-red-500]="!store.storeConfig().isOpen">
+                {{ store.storeConfig().isOpen ? 'ABIERTA' : 'CERRADA' }}
+             </span>
+
+             <button 
+                (click)="toggleStore(!store.storeConfig().isOpen)"
+                class="relative inline-flex h-10 w-20 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brown-900 focus:ring-offset-2"
+                [class.bg-green-500]="store.storeConfig().isOpen"
+                [class.bg-gray-300]="!store.storeConfig().isOpen"
+              >
+                <span
+                  class="inline-block h-8 w-8 transform rounded-full bg-white transition shadow-sm"
+                  [class.translate-x-11]="store.storeConfig().isOpen"
+                  [class.translate-x-1]="!store.storeConfig().isOpen"
+                ></span>
+              </button>
+          </div>
+        </div>
+
+        @if (!store.storeConfig().isOpen) {
+          <div class="mt-6 bg-red-50 p-6 rounded-2xl border border-red-100">
+            <label class="block text-sm font-bold text-red-800 mb-2">Mensaje de "Cerrado" (visible a clientes)</label>
+            <div class="flex gap-4">
+              <input 
+                type="text" 
+                [(ngModel)]="closedMessage" 
+                class="flex-1 bg-white border border-red-200 rounded-lg p-3 text-red-900 placeholder-red-300 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                placeholder="Ej: Volvemos mañana a las 8am 🍪">
+              <button (click)="updateClosedMessage()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition">
+                Guardar Mensaje
+              </button>
+            </div>
+            <p class="text-xs text-red-400 mt-2 font-bold">⚠️ Recuerda guardar el mensaje después de editarlo.</p>
+          </div>
+        }
       </div>
 
       <!-- Stats Cards -->
@@ -121,6 +168,16 @@ export class AdminDashboardComponent {
   store = inject(StoreService);
   private auth = inject(Auth);
 
+  // Local state for closed message editing
+  closedMessage = '';
+
+  constructor() {
+    // Sync local message with store config when it changes
+    effect(() => {
+      this.closedMessage = this.store.storeConfig().closedMessage;
+    });
+  }
+
   // State for logs
   debugLogs: string[] = ['Listo. Esperando comandos...'];
   consoleVisible = true;
@@ -137,6 +194,24 @@ export class AdminDashboardComponent {
 
   closeConsole() {
     this.consoleVisible = false;
+  }
+
+  async toggleStore(isOpen: boolean) {
+    try {
+      await this.store.updateStoreStatus(isOpen, this.closedMessage || 'Estamos cerrados por el momento.');
+      this.log(`Tienda ${isOpen ? 'ABIERTA' : 'CERRADA'}`);
+    } catch (err: any) {
+      this.log('Error cambiando estado tienda: ' + err.message);
+    }
+  }
+
+  async updateClosedMessage() {
+    try {
+      await this.store.updateStoreStatus(false, this.closedMessage);
+      this.log('Mensaje de cierre actualizado: ' + this.closedMessage);
+    } catch (err: any) {
+      this.log('Error guardando mensaje: ' + err.message);
+    }
   }
 
   async toggle(id: string, currentStatus: boolean) {

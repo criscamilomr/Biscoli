@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { APP_IMAGES } from '../assets/images';
-import { Firestore, collection, collectionData, doc, updateDoc, addDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, updateDoc, addDoc, setDoc, docData } from '@angular/fire/firestore';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -50,6 +50,13 @@ export class StoreService {
       map(flavors => flavors.sort((a, b) => a.name.localeCompare(b.name)))
     ),
     { initialValue: [] as Flavor[] }
+  );
+
+  readonly storeConfig = toSignal(
+    docData(doc(this.firestore, 'config', 'store')).pipe(
+      map(data => data as { isOpen: boolean; closedMessage: string } || { isOpen: true, closedMessage: '' })
+    ),
+    { initialValue: { isOpen: true, closedMessage: '' } }
   );
 
   readonly boxPrices: Record<number, number> = {
@@ -144,11 +151,15 @@ export class StoreService {
     this.cart.set([]);
   }
 
-  // --- ADMIN ACTIONS ---
-
   async toggleStock(flavorId: string, currentStatus: boolean) {
     const docRef = doc(this.firestore, 'flavors', flavorId);
     await updateDoc(docRef, { available: !currentStatus });
+  }
+
+  async updateStoreStatus(isOpen: boolean, closedMessage: string) {
+    const docRef = doc(this.firestore, 'config', 'store');
+    // Use setDoc with merge to ensure document exists
+    await setDoc(docRef, { isOpen, closedMessage }, { merge: true });
   }
 
   // One-time Use: Seed data to Firestore
