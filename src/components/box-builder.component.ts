@@ -36,7 +36,7 @@ import { StoreService } from '../services/store.service';
             (click)="store.finishBox()"
             class="bg-brown-900 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-full font-black shadow-lg hover:bg-black transition-all text-sm flex items-center gap-2 tracking-wide uppercase"
           >
-            <span>{{ store.boxPrices[store.selectedBoxSize()] | currency:'$':'symbol':'1.0-0' }}</span>
+            <span>{{ currentPrice() | currency:'$':'symbol':'1.0-0' }}</span>
             <span class="hidden md:inline">| Agregar</span>
           </button>
         </div>
@@ -149,6 +149,14 @@ import { StoreService } from '../services/store.service';
                       <p class="text-sm text-gray-500 leading-snug mb-3 line-clamp-2 font-medium">{{flavor.description}}</p>
                       
                       
+                        @if (flavor.price && flavor.price > store.boxPrices[1]) {
+                          <div class="mb-2">
+                             <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200">
+                               +{{ (flavor.price - store.boxPrices[1]) | currency:'$':'symbol':'1.0-0' }} / ud
+                             </span>
+                          </div>
+                        }
+
                       <div class="mt-auto">
                         <button 
                           (click)="store.addFlavorToBox(flavor)"
@@ -192,6 +200,13 @@ export class BoxBuilderComponent {
   store = inject(StoreService);
 
   isFull = computed(() => this.store.currentBuilderFlavors().length >= this.store.selectedBoxSize());
+
+  currentPrice = computed(() => {
+    return this.store.calculateBoxPrice(
+      this.store.selectedBoxSize(),
+      this.store.currentBuilderFlavors()
+    );
+  });
 
   slots = computed(() => {
     const size = this.store.selectedBoxSize();

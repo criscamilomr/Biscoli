@@ -122,7 +122,7 @@ export class FlavorModalComponent {
 
   // Computed property for unit price based on store configuration
   get unitPrice() {
-    return this.store.boxPrices[1];
+    return (this.flavor.price && this.flavor.price > 0) ? this.flavor.price : this.store.boxPrices[1];
   }
 
   toggleIngredients() {

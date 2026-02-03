@@ -129,7 +129,9 @@ import { FlavorModalComponent } from './flavor-modal.component';
               
               <div class="mt-auto pt-4 flex flex-col gap-3 border-t border-gray-100" (click)="$event.stopPropagation()">
                 <div class="flex items-center justify-between">
-                  <span class="font-black text-xl text-brown-900">{{ store.boxPrices[1] | currency:'$':'symbol':'1.0-0' }}</span>
+                  <span class="font-black text-xl text-brown-900">
+                    {{ (flavor.price && flavor.price > 0 ? flavor.price : store.boxPrices[1]) | currency:'$':'symbol':'1.0-0' }}
+                  </span>
                 </div>
                 
                 <div class="flex items-center gap-2">
@@ -172,6 +174,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
             <div class="w-24 h-24 mb-6 bg-white/10 rounded-full flex items-center justify-center text-4xl group-hover:scale-110 transition-transform shadow-inner font-black text-amber-100">2🍪</div>
             <h3 class="text-3xl font-black text-white mb-2 tracking-tight">Caja Personal</h3>
             <p class="text-amber-200/60 mb-6 text-sm font-medium uppercase tracking-wide">Perfecta para un antojo</p>
+            <span class="text-xs text-amber-400/80 font-bold uppercase tracking-wider mb-1">Desde</span>
             <p class="text-4xl font-black text-amber-400 mb-8">{{ store.boxPrices[2] | currency:'$':'symbol':'1.0-0' }}</p>
             <button class="w-full bg-transparent border-2 border-amber-500 text-amber-500 py-4 rounded-xl font-black hover:bg-amber-500 hover:text-brown-900 transition-all uppercase tracking-wider text-sm">Comenzar</button>
           </div>
@@ -182,6 +185,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
             <div class="w-32 h-32 mb-8 bg-amber-500 rounded-full flex items-center justify-center text-5xl group-hover:scale-110 transition-transform shadow-lg text-brown-900 font-black">4🍪</div>
             <h3 class="text-4xl font-black text-white mb-2 tracking-tight">Caja Compartir</h3>
             <p class="text-amber-100/90 mb-8 font-bold text-lg">La dosis ideal de felicidad</p>
+            <span class="text-xs text-amber-100/80 font-bold uppercase tracking-wider mb-1">Desde</span>
             <p class="text-5xl font-black text-white mb-10 drop-shadow-lg">{{ store.boxPrices[4] | currency:'$':'symbol':'1.0-0' }}</p>
             <button class="w-full bg-amber-500 text-brown-900 py-5 rounded-2xl font-black hover:bg-amber-400 transition-all shadow-xl hover:shadow-amber-500/50 uppercase tracking-widest text-lg">Elegir esta Caja</button>
           </div>
@@ -194,6 +198,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
             <div class="w-24 h-24 mb-6 bg-white/10 rounded-full flex items-center justify-center text-4xl group-hover:scale-110 transition-transform shadow-inner font-black text-amber-100">6🍪</div>
             <h3 class="text-3xl font-black text-white mb-2 tracking-tight">Caja Familia</h3>
             <p class="text-amber-200/60 mb-6 text-sm font-medium uppercase tracking-wide">Para que todos prueben</p>
+            <span class="text-xs text-amber-400/80 font-bold uppercase tracking-wider mb-1">Desde</span>
             <p class="text-4xl font-black text-amber-400 mb-8">{{ store.boxPrices[6] | currency:'$':'symbol':'1.0-0' }}</p>
             <button class="w-full bg-transparent border-2 border-amber-500 text-amber-500 py-4 rounded-xl font-black hover:bg-amber-500 hover:text-brown-900 transition-all uppercase tracking-wider text-sm">Comenzar</button>
           </div>

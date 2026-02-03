@@ -9,6 +9,7 @@ export interface Flavor {
   id: string;
   name: string;
   description: string;
+  price?: number; // Optional override price
   color: string;
   image?: string;
   ingredients: string[];
@@ -66,6 +67,9 @@ export class StoreService {
     6: 85900
   };
 
+  // Base price for calculations (Standard individual cookie price)
+  private readonly STANDARD_PRICE = 15900;
+
   // Computed
   readonly subtotal = computed(() => {
     return this.cart().reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -114,16 +118,31 @@ export class StoreService {
     });
   }
 
+  calculateBoxPrice(size: number, flavors: Flavor[]): number {
+    let basePrice = this.boxPrices[size] || 0;
+    let surcharge = 0;
+
+    for (const flavor of flavors) {
+      if (flavor.price && flavor.price > this.STANDARD_PRICE) {
+        surcharge += (flavor.price - this.STANDARD_PRICE);
+      }
+    }
+
+    return basePrice + surcharge;
+  }
+
   finishBox() {
     const size = this.selectedBoxSize();
     const flavors = this.currentBuilderFlavors();
 
     if (flavors.length === size) {
+      const finalPrice = this.calculateBoxPrice(size, flavors);
+
       const newItem: BoxItem = {
         id: crypto.randomUUID(),
         size,
         flavors,
-        price: this.boxPrices[size],
+        price: finalPrice,
         quantity: 1
       };
       this.cart.update(c => [...c, newItem]);
@@ -133,11 +152,14 @@ export class StoreService {
   }
 
   addIndividualProduct(flavor: Flavor, count: number = 1) {
+    // Individual product logic: Use flavor price if set, otherwise standard box 1 price
+    const price = flavor.price && flavor.price > 0 ? flavor.price : this.boxPrices[1];
+
     const newItem: BoxItem = {
       id: crypto.randomUUID(),
       size: 1,
       flavors: [flavor],
-      price: this.boxPrices[1],
+      price: price,
       quantity: count
     };
     this.cart.update(c => [...c, newItem]);
@@ -154,6 +176,11 @@ export class StoreService {
   async toggleStock(flavorId: string, currentStatus: boolean) {
     const docRef = doc(this.firestore, 'flavors', flavorId);
     await updateDoc(docRef, { available: !currentStatus });
+  }
+
+  async updateFlavorPrice(flavorId: string, price: number) {
+    const docRef = doc(this.firestore, 'flavors', flavorId);
+    await updateDoc(docRef, { price });
   }
 
   async updateStoreStatus(isOpen: boolean, closedMessage: string) {
@@ -180,7 +207,8 @@ export class StoreService {
         color: 'bg-amber-800',
         image: APP_IMAGES.chocochip,
         ingredients: ['Harina de almendra', 'Chips de chocolate 70%', 'Alulosa', 'Aceite de coco', 'Extracto de vainilla', 'Polvo de hornear', 'Sal marina'],
-        available: true
+        available: true,
+        price: 15900
       },
       {
         id: 'hazelnut',
@@ -189,7 +217,8 @@ export class StoreService {
         color: 'bg-red-700',
         image: APP_IMAGES.redvelvet, // Image name remains redvelvet for now unless user wants to rename asset
         ingredients: ['Harina de almendra', 'Cacao en polvo', 'Remolacha en polvo (color natural)', 'Alulosa', 'Chips de chocolate blanco vegano', 'Aceite de coco'],
-        available: true
+        available: true,
+        price: 15900
       },
       {
         id: 'carrotcake',
@@ -198,7 +227,8 @@ export class StoreService {
         color: 'bg-orange-200',
         image: APP_IMAGES.carrotcake,
         ingredients: ['Harina de almendra', 'Zanahoria', 'Nueces pecanas', 'Queso crema vegano (Krima)', 'Alulosa', 'Especias', 'Aceite de coco'],
-        available: true // Reset to true for DB, we control it there now
+        available: true, // Reset to true for DB, we control it there now
+        price: 15900
       }
     ];
 
