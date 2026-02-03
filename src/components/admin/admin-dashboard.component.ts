@@ -94,11 +94,11 @@ import { Auth, signOut } from '@angular/fire/auth';
 
         <div class="divide-y divide-gray-100">
            @for (flavor of store.flavors(); track flavor.id) {
-             <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+             <div class="p-6 flex flex-col md:flex-row items-start md:items-center justify-between hover:bg-gray-50 transition-colors group gap-4">
                
-               <div class="flex items-center gap-6">
+               <div class="flex items-center gap-6 flex-1">
                  <!-- Image Preview -->
-                 <div class="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden relative border border-gray-200">
+                 <div class="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden relative border border-gray-200 shrink-0">
                     @if (flavor.image) {
                       <img [src]="flavor.image" class="w-full h-full object-cover">
                     } @else {
@@ -113,12 +113,34 @@ import { Auth, signOut } from '@angular/fire/auth';
 
                  <div>
                     <h4 class="font-bold text-lg text-brown-900 mb-1">{{ flavor.name }}</h4>
-                    <p class="text-xs text-gray-500 font-mono">{{ flavor.id }}</p>
+                    <p class="text-xs text-gray-500 font-mono mb-2">{{ flavor.id }}</p>
+                    
+                    <!-- Price Editor -->
+                    <div class="flex items-center gap-2">
+                       <span class="text-xs font-bold text-gray-500">Precio:</span>
+                       <div class="relative">
+                          <span class="absolute left-2 top-1.5 text-xs text-gray-400">$</span>
+                          <input 
+                            #priceInput
+                            type="number" 
+                            [value]="flavor.price || 15900" 
+                            class="w-24 pl-5 py-1 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                            (keyup.enter)="updatePrice(flavor.id, priceInput.value)"
+                          >
+                       </div>
+                       <button 
+                         (click)="updatePrice(flavor.id, priceInput.value)"
+                         class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded hover:bg-amber-200 transition font-bold"
+                        >
+                         Guardar
+                       </button>
+                    </div>
+
                  </div>
                </div>
                
                <!-- Toggle Switch -->
-               <div class="flex items-center gap-4">
+               <div class="flex items-center gap-4 self-end md:self-center">
                   <span class="text-sm font-bold" [class.text-green-600]="flavor.available !== false" [class.text-red-500]="flavor.available === false">
                     {{ flavor.available !== false ? 'Disponible' : 'Agotado' }}
                   </span>
@@ -219,6 +241,21 @@ export class AdminDashboardComponent {
       await this.store.toggleStock(id, currentStatus);
     } catch (err: any) {
       this.log('ERROR al cambiar stock: ' + err.message);
+    }
+  }
+
+  async updatePrice(id: string, priceStr: string) {
+    const price = parseInt(priceStr);
+    if (isNaN(price)) {
+      this.log('❌ Error: El precio debe ser un número válido.');
+      return;
+    }
+
+    try {
+      await this.store.updateFlavorPrice(id, price);
+      this.log(`✅ Precio del sabor ${id} actualizado a $${price}`);
+    } catch (err: any) {
+      this.log('❌ Error al actualizar precio: ' + err.message);
     }
   }
 
