@@ -25,7 +25,7 @@ import { StoreService } from '../services/store.service';
             <span class="text-xs uppercase tracking-widest text-amber-500/80 mb-4 font-bold">Síguenos</span>
             <div class="flex items-center gap-6">
                 <!-- Instagram -->
-                <a href="https://instagram.com/biscoli.co" target="_blank" class="p-3 bg-white/5 rounded-full hover:scale-110 transition-all">
+                <a href="http://instagram.com/_u/biscoli.co/" target="_blank" class="p-3 bg-white/5 rounded-full hover:scale-110 transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-100">
                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -41,7 +41,7 @@ import { StoreService } from '../services/store.service';
                 </a>
             </div>
             
-            <a href="https://instagram.com/biscoli.co" target="_blank" class="mt-4 text-sm font-bold text-amber-500 hover:text-amber-400">biscoli.co</a>
+            <a href="http://instagram.com/_u/biscoli.co/" target="_blank" class="mt-4 text-sm font-bold text-amber-500 hover:text-amber-400">biscoli.co</a>
         </div>
 
       </div>
