@@ -21,6 +21,9 @@ import { APP_IMAGES } from '../assets/images';
 export class LogoComponent {
   @Input() width: string = '100%';
   @Input() height: string = '100%';
+  @Input() variant: 'default' | 'no-slogan' = 'default';
 
-  logoUrl = APP_IMAGES.logo;
+  get logoUrl() {
+    return this.variant === 'no-slogan' ? APP_IMAGES.logoSinSlogan : APP_IMAGES.logo;
+  }
 }

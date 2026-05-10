@@ -12,14 +12,18 @@ export default {
                 serif: ['Outfit', 'sans-serif'],
             },
             colors: {
-                brown: {
-                    900: '#1C1917',
-                    800: '#292524',
-                    700: '#44403c',
+                forest: {
+                    900: '#3A4A3A',
+                    800: '#4A5D4A',
+                    700: '#5A6D5A',
                 },
-                amber: {
-                    50: '#FFF8E1',
-                    100: '#FFECB3',
+                sage: {
+                    50: '#f0f5ee',
+                    100: '#e0eadc',
+                    200: '#c5d6be',
+                    300: '#A3B88C',
+                    400: '#8FA67A',
+                    500: '#7A9468',
                 }
             },
             animation: {
