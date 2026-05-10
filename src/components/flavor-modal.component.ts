@@ -10,7 +10,7 @@ import { Flavor, StoreService } from '../services/store.service';
     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm bg-black/40 transition-all animate-fade-in" (click)="close.emit()">
       <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden relative flex flex-col md:flex-row md:max-w-3xl transform transition-all animate-scale-up" (click)="$event.stopPropagation()">
         
-        <button (click)="close.emit()" class="absolute top-4 right-4 z-20 bg-white/50 hover:bg-white backdrop-blur-md rounded-full p-2 text-stone-800 transition-colors shadow-sm">
+        <button (click)="close.emit()" class="absolute top-4 right-4 z-30 bg-white/50 hover:bg-white backdrop-blur-md rounded-full p-2 text-stone-800 transition-colors shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
 
@@ -116,7 +116,7 @@ export class FlavorModalComponent implements OnInit, OnDestroy {
       if (this.flavor.hoverImage) {
         this.showHoverImage.update(v => !v);
       }
-    }, 4000);
+    }, 3000);
   }
 
   ngOnDestroy() {

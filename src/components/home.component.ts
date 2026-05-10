@@ -24,6 +24,10 @@ import { FlavorModalComponent } from './flavor-modal.component';
         El placer de lo dulce, <br class="md:hidden"> sin la culpa. <br>
         <span class="text-[#8FA67A] font-black drop-shadow-sm">Sin Gluten. Sin Azúcar. Veganas.</span>
       </p>
+      <div class="flex items-center gap-2 mb-6 bg-white/70 backdrop-blur-sm px-5 py-2.5 rounded-full shadow-sm border border-[#8FA67A]/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#8FA67A]" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+        <span class="text-sm font-bold text-[#4A5D4A] tracking-wide">Envíos solo en Cali</span>
+      </div>
       <button (click)="scrollToSection('menu')" class="bg-[#4A5D4A] text-white px-10 py-5 rounded-full text-xl font-black shadow-2xl hover:bg-[#3A4A3A] hover:scale-105 transition-all transform flex items-center gap-2 ring-4 ring-[#8FA67A]/30 tracking-wide uppercase">
         <span>Pedir Ahora</span>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
@@ -162,7 +166,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
            </div>
            <div class="bg-[#3A4A3A]/5 rounded-3xl p-8 border border-[#3A4A3A]/10 hover:bg-[#3A4A3A]/10 transition-colors cursor-help md:col-span-2">
              <h3 class="text-2xl font-bold text-[#3A4A3A] mb-3">¿Hacen envíos a todo el país?</h3>
-             <p class="text-[#3A4A3A]/80 text-lg leading-relaxed">Por el momento hacemos entregas locales para garantizar la frescura. Contáctanos por WhatsApp para consultar tu zona.</p>
+             <p class="text-[#3A4A3A]/80 text-lg leading-relaxed">Por el momento solo realizamos envíos dentro de la ciudad de <strong>Cali</strong> para garantizar la frescura de nuestras galletas. ¡Esperamos expandirnos pronto a más ciudades!</p>
            </div>
          </div>
        </div>

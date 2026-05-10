@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { StoreService } from '../services/store.service';
 
 @Component({
@@ -91,6 +91,31 @@ import { StoreService } from '../services/store.service';
                 }
               </div>
 
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Ciudad</label>
+                <select formControlName="city" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#8FA67A]/50 appearance-none cursor-pointer">
+                  <option value="" disabled>Selecciona tu ciudad</option>
+                  <option value="Cali">Cali</option>
+                  <option value="Bogotá">Bogotá</option>
+                  <option value="Medellín">Medellín</option>
+                  <option value="Barranquilla">Barranquilla</option>
+                  <option value="Cartagena">Cartagena</option>
+                  <option value="Bucaramanga">Bucaramanga</option>
+                  <option value="Pereira">Pereira</option>
+                  <option value="Manizales">Manizales</option>
+                  <option value="Otra">Otra</option>
+                </select>
+                @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.hasError('required')) {
+                  <span class="text-red-500 text-xs">Selecciona una ciudad</span>
+                }
+                @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.hasError('onlyCali')) {
+                  <div class="mt-2 bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2 animate-fade-in">
+                    <span class="text-lg">😔</span>
+                    <p class="text-red-600 text-sm font-medium">Lo sentimos, por el momento solo hacemos entregas en <strong>Cali</strong>. ¡Pronto llegaremos a más ciudades!</p>
+                  </div>
+                }
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-bold text-gray-700 mb-1">Dirección</label>
@@ -143,20 +168,31 @@ import { StoreService } from '../services/store.service';
       }
     </div>
   `,
-  styles: [],
+  styles: [`
+    .animate-fade-in { animation: fade-in 0.3s ease-out; }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutComponent {
   store = inject(StoreService);
   private fb: FormBuilder = inject(FormBuilder);
 
+  readonly cities = ['Cali', 'Bogotá', 'Medellín', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Pereira', 'Manizales', 'Otra'];
+
   checkoutForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+    city: ['', [Validators.required, this.caliOnlyValidator]],
     address: ['', Validators.required],
     neighborhood: ['', Validators.required],
     notes: ['']
   });
+
+  private caliOnlyValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null; // let required handle empty
+    return control.value === 'Cali' ? null : { onlyCali: true };
+  }
 
   submitOrder() {
     if (this.checkoutForm.invalid) return;
@@ -187,6 +223,7 @@ export class CheckoutComponent {
     message += `*Datos de Entrega:*\\n`;
     message += `Nombre: ${name}\\n`;
     message += `Teléfono: ${phone}\\n`;
+    message += `Ciudad: ${this.checkoutForm.value.city}\\n`;
     message += `Dirección: ${address}\\n`;
     message += `Barrio: ${neighborhood}\\n`;
     message += `Método de Pago: TRANSFERENCIA (Único medio)\\n`; // Hardcoded as requested
