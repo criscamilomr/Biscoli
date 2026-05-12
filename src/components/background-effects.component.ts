@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectionStrategy, signal, computed, inject, NgZone, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -6,29 +7,28 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- Main Container with More Visible Gradient Base -->
-    <!-- Gradient goes from Warm Cream (Top Left) to Soft Blue (Bottom Right) -->
-    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-gradient-to-br from-[#fff3e0] via-[#f5f5f5] to-[#e1f5fe]">
+    <!-- Main Container - Sage/Green Gradient -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-gradient-to-br from-[#f0f5ee] via-[#f5f7f3] to-[#e8f0e4]">
       
-      <!-- Large Atmospheric Gradients - Increased Opacity -->
-      <!-- Top Right: Brand Blue (Visible) -->
-      <div class="absolute -top-[20%] -right-[10%] w-[80vw] h-[80vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-[#72c3fa]/25 via-[#72c3fa]/10 to-transparent blur-[100px] animate-pulse-slow"></div>
+      <!-- Large Atmospheric Gradients -->
+      <!-- Top Right: Sage Green (Visible) -->
+      <div class="absolute -top-[20%] -right-[10%] w-[80vw] h-[80vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-[#8FA67A]/20 via-[#8FA67A]/8 to-transparent blur-[100px] animate-pulse-slow"></div>
       
-      <!-- Bottom Left: Warm Cookie Tone (Visible) -->
-      <div class="absolute -bottom-[20%] -left-[10%] w-[70vw] h-[70vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-[#ffcc80]/20 via-[#ffcc80]/5 to-transparent blur-[120px]"></div>
+      <!-- Bottom Left: Warm Sage Tone (Visible) -->
+      <div class="absolute -bottom-[20%] -left-[10%] w-[70vw] h-[70vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-[#A3B88C]/15 via-[#A3B88C]/5 to-transparent blur-[120px]"></div>
 
       <!-- Mid Floating Orbs for depth and movement -->
-      <div class="absolute top-[30%] left-[10%] w-[45vw] h-[45vw] bg-blue-200/20 rounded-full blur-[90px] animate-float-medium mix-blend-multiply"></div>
-      <div class="absolute top-[15%] right-[25%] w-[35vw] h-[35vw] bg-amber-100/40 rounded-full blur-[80px] animate-float-slow mix-blend-multiply"></div>
+      <div class="absolute top-[30%] left-[10%] w-[45vw] h-[45vw] bg-[#c5d6be]/20 rounded-full blur-[90px] animate-float-medium mix-blend-multiply"></div>
+      <div class="absolute top-[15%] right-[25%] w-[35vw] h-[35vw] bg-[#e0eadc]/40 rounded-full blur-[80px] animate-float-slow mix-blend-multiply"></div>
 
-      <!-- Decor Shapes - More Vibrant -->
-      <div class="absolute top-32 left-10 w-32 h-32 bg-[#72c3fa]/20 rounded-full blur-2xl animate-float-slow"></div>
-      <div class="absolute bottom-1/3 right-10 w-48 h-48 bg-[#ffe082]/20 rounded-full blur-3xl animate-float-medium"></div>
+      <!-- Decor Shapes - Sage Green Tones -->
+      <div class="absolute top-32 left-10 w-32 h-32 bg-[#8FA67A]/15 rounded-full blur-2xl animate-float-slow"></div>
+      <div class="absolute bottom-1/3 right-10 w-48 h-48 bg-[#A3B88C]/15 rounded-full blur-3xl animate-float-medium"></div>
 
-      <!-- NEW: Parallax Cookies (Gray & Visible) -->
+      <!-- Parallax Cookies (Gray & Visible) -->
       @for (cookie of floatingCookies; track $index) {
         <div 
-          class="absolute text-gray-500 transition-transform duration-75 ease-linear will-change-transform"
+          class="absolute text-[#8FA67A]/60 transition-transform duration-75 ease-linear will-change-transform"
           [style.left.%]="cookie.x"
           [style.top.%]="cookie.y"
           [style.width.px]="cookie.size"
@@ -58,7 +58,7 @@ import { CommonModule } from '@angular/common';
       <!-- Existing Particles -->
       @for (item of particles; track $index) {
         <div 
-          class="absolute rounded-full bg-[#72c3fa]/50 animate-drift"
+          class="absolute rounded-full bg-[#8FA67A]/40 animate-drift"
           [style.left.%]="item.x"
           [style.top.%]="item.y"
           [style.width.px]="item.size"
@@ -125,17 +125,6 @@ export class BackgroundEffectsComponent implements OnDestroy {
       // Create the listener function
       this.scrollListener = () => {
         const y = window.scrollY;
-        // Only update signal (which triggers CD) if value significantly changes to avoid thrashing?
-        // Actually, accessing signal inside template is fine, but the event itself firing constantly in zone is bad.
-        // Since we need to update the view based on scroll, we DO need to re-enter zone or use a signal that updates view.
-        // However, angular signals track dependencies.
-        // Best practice: Run 'addEventListener' outside angular.
-        // Then inside the callback, if we update a signal, angular will detect the change specifically for that signal's consumers.
-        // BUT standard OnPush components might not re-render unless we markForCheck or update a signal they consume.
-        // Here 'scrollY' is a signal used in template. Updating it will trigger CD for this component.
-        // We wrap the *update* in run? No, signals are zone-aware? 
-        // Actually signals don't require Zone.js for updates, but Angular's change detection usually relies on Zone to know *when* to check.
-        // Let's run the listener entirely outside, and manually update the signal.
         this.ngZone.run(() => {
           this.scrollY.set(y);
         });

@@ -14,15 +14,25 @@
 export const APP_IMAGES = {
   // Logo Principal
   logo: 'assets/biscoli-logo.png',
+  logoSinSlogan: 'assets/biscoli-transparente-sin-slogan.png',
 
-  // Sabores de Galletas
-  chocochip: 'assets/choco-clasica.jpg',
-  redvelvet: 'assets/cookie-flavor.jpg',
-  macadamia: 'assets/cookie-flavor.jpg',
-  carrotcake: 'assets/carrot-cake.jpg',
-  doublechoc: 'assets/cookie-flavor.jpg',
-  blueberry: 'assets/cookie-flavor.jpg',
-  matcha: 'assets/cookie-flavor.jpg',
+  // Sabores de Galletas (Base)
+  chocochip: 'assets/choco-clasica-b.jpg',
+  redvelvet: 'assets/cookie-flavor-b.jpg',
+  macadamia: 'assets/cookie-flavor-b.jpg',
+  carrotcake: 'assets/carrot-cake-b.jpg',
+  doublechoc: 'assets/cookie-flavor-b.jpg',
+  blueberry: 'assets/cookie-flavor-b.jpg',
+  matcha: 'assets/cookie-flavor-b.jpg',
+
+  // Sabores de Galletas (Hover)
+  chocochipHover: 'assets/choco-clasica-mitad.jpg',
+  redvelvetHover: 'assets/cookie-flavor-mitad.jpg',
+  macadamiaHover: 'assets/cookie-flavor-mitad.jpg',
+  carrotcakeHover: 'assets/carrot-cake-mitad.jpg',
+  doublechocHover: 'assets/cookie-flavor-mitad.jpg',
+  blueberryHover: 'assets/cookie-flavor-mitad.jpg',
+  matchaHover: 'assets/cookie-flavor-mitad.jpg',
 
   // (Opcional) Imágenes para las cajas si deseas cambiarlas en el futuro
   box2: '',

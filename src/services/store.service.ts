@@ -12,6 +12,7 @@ export interface Flavor {
   price?: number; // Optional override price
   color: string;
   image?: string;
+  hoverImage?: string;
   ingredients: string[];
   available?: boolean;
 }
@@ -206,6 +207,7 @@ export class StoreService {
         description: 'La favorita de todos con chips de chocolate 70% y nueces pecanas.',
         color: 'bg-amber-800',
         image: APP_IMAGES.chocochip,
+        hoverImage: APP_IMAGES.chocochipHover,
         ingredients: ['Harina de almendra', 'Chips de chocolate 70%', 'Alulosa', 'Aceite de coco', 'Extracto de vainilla', 'Polvo de hornear', 'Sal marina'],
         available: true,
         price: 15900
@@ -216,6 +218,7 @@ export class StoreService {
         description: 'Suave, con un relleno cremoso de Paranice.',
         color: 'bg-red-700',
         image: APP_IMAGES.redvelvet, // Image name remains redvelvet for now unless user wants to rename asset
+        hoverImage: APP_IMAGES.redvelvetHover,
         ingredients: ['Harina de almendra', 'Cacao en polvo', 'Remolacha en polvo (color natural)', 'Alulosa', 'Chips de chocolate blanco vegano', 'Aceite de coco'],
         available: true,
         price: 15900
@@ -226,6 +229,7 @@ export class StoreService {
         description: 'Suave galleta de zanahoria con especias, trozos de nuez pecana y un delicioso centro de queso crema vegano Krima.',
         color: 'bg-orange-200',
         image: APP_IMAGES.carrotcake,
+        hoverImage: APP_IMAGES.carrotcakeHover,
         ingredients: ['Harina de almendra', 'Zanahoria', 'Nueces pecanas', 'Queso crema vegano (Krima)', 'Alulosa', 'Especias', 'Aceite de coco'],
         available: true, // Reset to true for DB, we control it there now
         price: 15900

@@ -60,15 +60,15 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
           
           <!-- Logo -->
           <div (click)="navigate('inicio')" class="cursor-pointer transition-transform hover:scale-105 flex items-center relative z-50">
-            <app-logo width="120px" height="40px"></app-logo>
+            <app-logo width="120px" height="40px" variant="no-slogan"></app-logo>
           </div>
 
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex items-center gap-8">
-            <button (click)="navigate('inicio')" class="text-[#3E2723] hover:text-[#72c3fa] font-bold tracking-wide transition-colors">INICIO</button>
-            <button (click)="navigate('cajas')" class="text-[#3E2723] hover:text-[#72c3fa] font-bold tracking-wide transition-colors">ARMA TU CAJA</button>
-            <button (click)="navigate('ingredientes')" class="text-[#3E2723] hover:text-[#72c3fa] font-bold tracking-wide transition-colors">INGREDIENTES</button>
-            <button (click)="navigate('faq')" class="text-[#3E2723] hover:text-[#72c3fa] font-bold tracking-wide transition-colors">FAQ</button>
+            <button (click)="navigate('inicio')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">INICIO</button>
+            <button (click)="navigate('cajas')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">ARMA TU CAJA</button>
+            <button (click)="navigate('ingredientes')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">INGREDIENTES</button>
+            <button (click)="navigate('faq')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">FAQ</button>
           </nav>
           
           <!-- Actions (Cart & Mobile Menu) -->
@@ -76,7 +76,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
             <!-- Cart Button -->
             <button (click)="store.setView('CHECKOUT')" 
               [class.animate-bump]="cartBump()"
-              class="relative group bg-[#3E2723] text-white px-4 py-2 rounded-full font-bold shadow-lg hover:bg-[#5D4037] flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
+              class="relative group bg-[#4A5D4A] text-white px-4 py-2 rounded-full font-bold shadow-lg hover:bg-[#3A4A3A] flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
               <span>🛒</span>
               @if (store.cartCount() > 0) {
                  <span class="bg-red-500 text-white text-[10px] absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">{{store.cartCount()}}</span>
@@ -85,7 +85,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
             </button>
 
             <!-- Mobile Menu Button -->
-            <button (click)="toggleMenu()" class="md:hidden text-[#3E2723] p-2 focus:outline-none transition-transform active:scale-90">
+            <button (click)="toggleMenu()" class="md:hidden text-[#4A5D4A] p-2 focus:outline-none transition-transform active:scale-90">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 @if (mobileMenuOpen()) {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -108,10 +108,10 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
         [class.py-0]="!mobileMenuOpen()"
         [class.py-8]="mobileMenuOpen()"
       >
-        <button (click)="navigate('inicio')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Inicio</button>
-        <button (click)="navigate('cajas')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Arma tu Caja</button>
-        <button (click)="navigate('ingredientes')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">Ingredientes</button>
-        <button (click)="navigate('faq')" class="w-full py-3 text-lg text-[#3E2723] font-black tracking-widest hover:bg-amber-500/10 transition-colors uppercase">FAQ</button>
+        <button (click)="navigate('inicio')" class="w-full py-3 text-lg text-[#4A5D4A] font-black tracking-widest hover:bg-[#8FA67A]/10 transition-colors uppercase">Inicio</button>
+        <button (click)="navigate('cajas')" class="w-full py-3 text-lg text-[#4A5D4A] font-black tracking-widest hover:bg-[#8FA67A]/10 transition-colors uppercase">Arma tu Caja</button>
+        <button (click)="navigate('ingredientes')" class="w-full py-3 text-lg text-[#4A5D4A] font-black tracking-widest hover:bg-[#8FA67A]/10 transition-colors uppercase">Ingredientes</button>
+        <button (click)="navigate('faq')" class="w-full py-3 text-lg text-[#4A5D4A] font-black tracking-widest hover:bg-[#8FA67A]/10 transition-colors uppercase">FAQ</button>
       </div>
     </header>
 
@@ -123,7 +123,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
         @case ('CHECKOUT') { <div @fadeIn class="w-full"><app-checkout /></div> }
         @case ('SUCCESS') { 
           <div @fadeIn class="h-screen flex items-center justify-center w-full">
-            <h1 class="text-4xl text-[#3E2723]">Success!</h1>
+            <h1 class="text-4xl text-[#4A5D4A]">Success!</h1>
           </div>
         }
         @case ('TERMS') { <div @fadeIn class="w-full"><app-terms /></div> }
