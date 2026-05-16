@@ -16,7 +16,7 @@ import { Flavor, StoreService } from '../services/store.service';
 
         <div class="overflow-y-auto flex-1 flex flex-col md:flex-row w-full overscroll-contain">
           
-          <div [class]="'relative aspect-square md:aspect-auto md:h-auto md:w-1/2 flex-shrink-0 flex items-center justify-center overflow-hidden ' + flavor.color">
+          <div class="relative aspect-square md:aspect-auto md:h-auto md:w-1/2 flex-shrink-0 flex items-center justify-center overflow-hidden bg-white">
             @if (flavor.image) {
               <img [src]="flavor.image" [alt]="flavor.name" class="w-full h-full object-contain absolute inset-0 z-10 transition-opacity duration-1000" [class.opacity-0]="showHoverImage()">
               @if (flavor.hoverImage) {
