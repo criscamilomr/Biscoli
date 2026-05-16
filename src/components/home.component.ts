@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, AfterViewInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { StoreService, Flavor } from '../services/store.service';
 import { FooterComponent } from './footer.component';
@@ -13,14 +13,58 @@ import { FlavorModalComponent } from './flavor-modal.component';
   imports: [CommonModule, NgOptimizedImage, LogoComponent, FlavorModalComponent, MarqueeComponent],
   template: `
     @if (selectedFlavor()) {
-      <app-flavor-modal [flavor]="selectedFlavor()!" (close)="closeModal()" (addToCart)="addFlavorToBoxAndClose(selectedFlavor()!, $event)"></app-flavor-modal>
+      <app-flavor-modal [flavor]="selectedFlavor()!" (close)="closeModal()"></app-flavor-modal>
     }
 
-    <section id="inicio" class="relative min-h-[45vh] flex flex-col items-center justify-center text-center p-6 pb-6 pt-32 md:pt-40">
-      <div class="relative w-72 h-32 md:w-96 md:h-48 mb-4 animate-bounce-slow">
+    <!-- Video Header Section -->
+    <section id="inicio" class="video-header-section">
+      <div class="video-container">
+        <!-- Desktop Video -->
+        <video
+          #headerVideo
+          class="header-video desktop-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          [muted]="true"
+        >
+          <source src="assets/Video header wide.mp4" type="video/mp4">
+        </video>
+        <!-- Mobile Video -->
+        <video
+          #headerVideo
+          class="header-video mobile-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          [muted]="true"
+        >
+          <source src="assets/Video header vertical.mp4" type="video/mp4">
+        </video>
+
+        <!-- Gradient overlay at bottom of video -->
+        <div class="video-bottom-gradient"></div>
+
+        <!-- Pedir Ahora button INSIDE the video frame -->
+        <div class="video-cta-wrapper">
+          <button (click)="scrollToSection('menu')" class="video-cta-button">
+            <span>Pedir Ahora</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logo & tagline OUTSIDE video, below the video container -->
+    <section class="post-video-hero">
+      <div class="relative w-52 h-24 md:w-72 md:h-32 mb-4 animate-bounce-slow">
         <app-logo width="100%" height="100%"></app-logo>
       </div>
-      <p class="text-2xl md:text-3xl text-[#3A4A3A] font-bold max-w-3xl mb-8 leading-relaxed mt-4 tracking-tight">
+      <p class="text-xl md:text-2xl text-[#3A4A3A] font-bold max-w-3xl mb-4 leading-relaxed tracking-tight text-center px-6">
         El placer de lo dulce, <br class="md:hidden"> sin la culpa. <br>
         <span class="text-[#8FA67A] font-black drop-shadow-sm">Sin Gluten. Sin Azúcar. Veganas.</span>
       </p>
@@ -28,10 +72,6 @@ import { FlavorModalComponent } from './flavor-modal.component';
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#8FA67A]" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
         <span class="text-sm font-bold text-[#4A5D4A] tracking-wide">Envíos solo en Cali</span>
       </div>
-      <button (click)="scrollToSection('menu')" class="bg-[#4A5D4A] text-white px-10 py-5 rounded-full text-xl font-black shadow-2xl hover:bg-[#3A4A3A] hover:scale-105 transition-all transform flex items-center gap-2 ring-4 ring-[#8FA67A]/30 tracking-wide uppercase">
-        <span>Pedir Ahora</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-      </button>
     </section>
 
     <app-marquee></app-marquee>
@@ -68,7 +108,7 @@ import { FlavorModalComponent } from './flavor-modal.component';
       <p class="text-center text-gray-500 mb-16 text-xl font-medium max-w-2xl mx-auto">Elige tus favoritos al armar tu caja. Diseñados para satisfacer sin comprometer tu salud.</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8">
         @for (flavor of store.flavors(); track flavor.id) {
-          <div (click)="openModal(flavor)" class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col h-full cursor-pointer ring-1 ring-black/5 hover:ring-black/10 relative" [class.grayscale]="flavor.available === false" [class.opacity-90]="flavor.available === false" [class.pointer-events-none]="flavor.available === false">
+          <div (click)="openModal(flavor)" class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col h-full cursor-pointer ring-1 ring-black/5 hover:ring-black/10 relative" [class.grayscale]="flavor.available === false" [class.opacity-90]="flavor.available === false">
             @if (flavor.available === false) {
               <div class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
                 <div class="bg-stone-900/90 text-white px-6 py-3 rounded-xl font-black text-xl uppercase tracking-widest shadow-2xl border-2 border-white/20 transform -rotate-12 backdrop-blur-sm">Agotado</div>
@@ -91,23 +131,11 @@ import { FlavorModalComponent } from './flavor-modal.component';
             <div class="p-5 md:p-6 flex-1 flex flex-col">
               <h3 class="font-black text-xl md:text-2xl text-[#3A4A3A] leading-tight mb-2 tracking-tight">{{flavor.name}}</h3>
               <p class="text-base text-gray-500 leading-relaxed line-clamp-3 font-medium mb-4">{{flavor.description}}</p>
-              <div class="mt-auto pt-4 flex flex-col gap-3 border-t border-gray-100" (click)="$event.stopPropagation()">
-                <div class="flex items-center justify-between">
-                  <span class="font-black text-xl text-[#3A4A3A]">{{ (flavor.price && flavor.price > 0 ? flavor.price : store.boxPrices[1]) | currency:'$':'symbol':'1.0-0' }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                    <button [disabled]="flavor.available === false" (click)="decQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-[#3A4A3A] disabled:opacity-50">-</button>
-                    <span class="w-8 text-center font-bold text-[#3A4A3A]">{{ getQty(flavor.id) }}</span>
-                    <button [disabled]="flavor.available === false" (click)="incQty(flavor.id, $event)" class="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center font-bold text-lg hover:bg-gray-200 transition-colors text-[#3A4A3A] disabled:opacity-50">+</button>
-                  </div>
-                  <button [disabled]="flavor.available === false" (click)="addFromCard(flavor, $event)" class="flex-1 bg-[#4A5D4A] text-[#f0f5ee] py-2 rounded-lg font-bold shadow-md hover:bg-[#3A4A3A] transition-all text-sm flex items-center justify-center gap-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-400">
-                    <span>{{ flavor.available === false ? 'Agotado' : 'Agregar' }}</span>
-                    @if (flavor.available !== false) {
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                    }
-                  </button>
-                </div>
+              <div class="mt-auto pt-4 border-t border-gray-100">
+                <button class="w-full inline-flex items-center justify-center gap-2 text-[#8FA67A] border-2 border-[#8FA67A] px-6 py-2.5 rounded-full font-bold text-sm hover:bg-[#8FA67A] hover:text-white transition-all">
+                  <span>Ver más</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -173,6 +201,94 @@ import { FlavorModalComponent } from './flavor-modal.component';
     </section>
   `,
   styles: [`
+    /* === Video Header === */
+    .video-header-section {
+      width: 100%;
+      margin-top: -80px; /* Pull up behind the toolbar */
+    }
+    .video-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      max-height: 90vh;
+    }
+    .header-video {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+    /* Desktop: show wide, hide vertical */
+    .desktop-video {
+      display: block;
+    }
+    .mobile-video {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .desktop-video {
+        display: none;
+      }
+      .mobile-video {
+        display: block;
+      }
+    }
+
+    /* Gradient overlay at bottom of video */
+
+    /* CTA button inside video */
+    .video-cta-wrapper {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    @media (max-width: 768px) {
+      .video-cta-wrapper {
+        bottom: 1.5rem;
+      }
+    }
+    .video-cta-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: #4A5D4A;
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      box-shadow: 0 0 0 4px rgba(143, 166, 122, 0.3), 0 20px 60px rgba(0,0,0,0.4);
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .video-cta-button:hover {
+      background-color: #3A4A3A;
+      transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+      .video-cta-button {
+        padding: 0.875rem 2rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Post-video hero (logo + tagline) */
+    .post-video-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2.5rem 1.5rem 1rem;
+    }
+
+    /* === Animations === */
     @keyframes bounce-slow {
       0%, 100% { transform: translateY(-3%); }
       50% { transform: translateY(3%); }
@@ -190,41 +306,42 @@ import { FlavorModalComponent } from './flavor-modal.component';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
   store = inject(StoreService);
   selectedFlavor = signal<Flavor | null>(null);
+
+  @ViewChildren('headerVideo') headerVideos!: QueryList<ElementRef<HTMLVideoElement>>;
+
+  ngAfterViewInit() {
+    this.forcePlayVideos();
+    // Also retry on user interaction in case autoplay was blocked
+    if (typeof document !== 'undefined') {
+      const handler = () => {
+        this.forcePlayVideos();
+        document.removeEventListener('click', handler);
+        document.removeEventListener('touchstart', handler);
+      };
+      document.addEventListener('click', handler, { once: true });
+      document.addEventListener('touchstart', handler, { once: true });
+    }
+  }
+
+  private forcePlayVideos() {
+    this.headerVideos?.forEach(ref => {
+      const video = ref.nativeElement;
+      video.muted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay blocked, will retry on user interaction
+        });
+      }
+    });
+  }
 
   scrollToSection(id: string) {
     const el = document.getElementById(id);
     el?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  cardQuantities = signal<Record<string, number>>({});
-
-  getQty(id: string): number {
-    return this.cardQuantities()[id] || 1;
-  }
-
-  incQty(id: string, event?: Event) {
-    if (event) event.stopPropagation();
-    this.cardQuantities.update(record => ({
-      ...record,
-      [id]: (record[id] || 1) + 1
-    }));
-  }
-
-  decQty(id: string, event?: Event) {
-    if (event) event.stopPropagation();
-    this.cardQuantities.update(record => {
-      const current = record[id] || 1;
-      return { ...record, [id]: current > 1 ? current - 1 : 1 };
-    });
-  }
-
-  addFromCard(flavor: Flavor, event: Event) {
-    event.stopPropagation();
-    const qty = this.getQty(flavor.id);
-    this.addFlavorToBoxAndClose(flavor, qty);
   }
 
   openModal(flavor: Flavor) {
@@ -235,15 +352,5 @@ export class HomeComponent {
   closeModal() {
     this.selectedFlavor.set(null);
     this.store.modalOpen.set(false);
-  }
-
-  addFlavorToBoxAndClose(flavor: Flavor, qty: number = 1) {
-    if (this.store.currentView() === 'BUILDER') {
-      for (let i = 0; i < qty; i++) { this.store.addFlavorToBox(flavor); }
-      this.closeModal();
-    } else {
-      this.store.addIndividualProduct(flavor, qty);
-      this.closeModal();
-    }
   }
 }
