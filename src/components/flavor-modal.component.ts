@@ -16,11 +16,11 @@ import { Flavor, StoreService } from '../services/store.service';
 
         <div class="overflow-y-auto flex-1 flex flex-col md:flex-row w-full overscroll-contain">
           
-          <div [class]="'relative h-48 md:h-auto md:w-1/2 flex-shrink-0 flex items-center justify-center overflow-hidden ' + flavor.color">
+          <div class="relative aspect-square md:aspect-auto md:h-auto md:w-1/2 flex-shrink-0 flex items-center justify-center overflow-hidden bg-white">
             @if (flavor.image) {
-              <img [src]="flavor.image" [alt]="flavor.name" class="w-full h-full object-cover absolute inset-0 z-10 transition-opacity duration-1000" [class.opacity-0]="showHoverImage()">
+              <img [src]="flavor.image" [alt]="flavor.name" class="w-full h-full object-contain absolute inset-0 z-10 transition-opacity duration-1000" [class.opacity-0]="showHoverImage()">
               @if (flavor.hoverImage) {
-                <img [src]="flavor.hoverImage" [alt]="flavor.name" class="w-full h-full object-cover absolute inset-0 z-20 transition-opacity duration-1000 opacity-0" [class.opacity-100]="showHoverImage()">
+                <img [src]="flavor.hoverImage" [alt]="flavor.name" class="w-full h-full object-contain absolute inset-0 z-20 transition-opacity duration-1000 opacity-0" [class.opacity-100]="showHoverImage()">
               }
             } @else {
               <div class="w-32 h-32 rounded-full bg-[#D7CCC8]/50 shadow-inner border-4 border-black/5"></div>
@@ -31,7 +31,7 @@ import { Flavor, StoreService } from '../services/store.service';
             <h2 class="text-3xl md:text-4xl font-black text-stone-900 mb-4 leading-tight tracking-tight">{{ flavor.name }}</h2>
             <p class="text-stone-600 mb-6 leading-relaxed">{{ flavor.description }}</p>
 
-            <div class="mb-8">
+            <div class="mb-6">
               <button (click)="toggleIngredients()" class="flex items-center gap-2 text-[#8FA67A] font-bold text-sm uppercase tracking-wide hover:text-[#4A5D4A] transition-colors">
                 <span>{{ showIngredients() ? 'Ocultar Ingredientes' : 'Ver ingredientes completos' }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-4 w-4 transition-transform duration-300 ' + (showIngredients() ? 'rotate-180' : '')" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
@@ -49,37 +49,17 @@ import { Flavor, StoreService } from '../services/store.service';
             </div>
 
             <div class="mt-auto">
-              
               @if (flavor.available === false) {
-                 <div class="bg-stone-100 rounded-xl p-4 text-center border-2 border-stone-200 mb-4">
+                 <div class="bg-stone-100 rounded-xl p-4 text-center border-2 border-stone-200">
                    <p class="text-stone-500 font-bold uppercase tracking-wider text-sm mb-1">Estado</p>
                    <p class="text-2xl font-black text-stone-400">Agotado Temporalmente</p>
                  </div>
               } @else {
-                  <div class="flex items-center justify-between mb-6">
-                     <div>
-                        <p class="text-sm text-stone-500 font-bold uppercase tracking-wider mb-1">Precio Unitario</p>
-                        <p class="text-3xl font-black text-stone-900">{{ unitPrice | currency:'$':'symbol':'1.0-0' }}</p>
-                     </div>
-                     <div class="flex items-center bg-stone-100 rounded-full p-2 border border-stone-200">
-                        <button (click)="decrease()" class="w-10 h-10 rounded-full bg-white text-stone-900 shadow-sm flex items-center justify-center font-bold text-xl hover:bg-[#e0eadc] transition-colors disabled:opacity-50">-</button>
-                        <span class="w-12 text-center font-black text-xl text-stone-900">{{ quantity() }}</span>
-                        <button (click)="increase()" class="w-10 h-10 rounded-full bg-[#4A5D4A] text-white shadow-sm flex items-center justify-center font-bold text-xl hover:bg-[#3A4A3A] transition-colors">+</button>
-                     </div>
-                  </div>
+                 <div class="bg-[#f0f5ee] rounded-xl p-4 text-center border border-[#8FA67A]/20">
+                   <p class="text-[#4A5D4A] font-bold uppercase tracking-wider text-sm mb-1">Precio Unitario</p>
+                   <p class="text-3xl font-black text-[#3A4A3A]">{{ unitPrice | currency:'$':'symbol':'1.0-0' }}</p>
+                 </div>
               }
-
-              <button [disabled]="flavor.available === false" (click)="addToCart.emit(quantity())" class="w-full bg-[#8FA67A] text-[#3A4A3A] py-4 px-8 rounded-full font-black text-lg hover:bg-[#A3B88C] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300">
-                <span class="flex items-center gap-2">
-                  <span>{{ flavor.available === false ? 'No Disponible' : 'Agregar al Carrito' }}</span>
-                  @if (flavor.available !== false) {
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                  }
-                </span>
-                @if (flavor.available !== false) {
-                  <span class="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">{{ (unitPrice * quantity()) | currency:'$':'symbol':'1.0-0' }}</span>
-                }
-              </button>
             </div>
 
           </div>
@@ -103,13 +83,16 @@ import { Flavor, StoreService } from '../services/store.service';
 export class FlavorModalComponent implements OnInit, OnDestroy {
   @Input({ required: true }) flavor!: Flavor;
   @Output() close = new EventEmitter<void>();
-  @Output() addToCart = new EventEmitter<number>(); // Emits quantity
 
   store = inject(StoreService);
   showIngredients = signal(false);
-  quantity = signal(1);
   showHoverImage = signal(false);
   private intervalId: any;
+
+  // Computed property for unit price based on store configuration
+  get unitPrice() {
+    return (this.flavor.price && this.flavor.price > 0) ? this.flavor.price : this.store.boxPrices[1];
+  }
 
   ngOnInit() {
     this.intervalId = setInterval(() => {
@@ -125,20 +108,7 @@ export class FlavorModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Computed property for unit price based on store configuration
-  get unitPrice() {
-    return (this.flavor.price && this.flavor.price > 0) ? this.flavor.price : this.store.boxPrices[1];
-  }
-
   toggleIngredients() {
     this.showIngredients.update(v => !v);
-  }
-
-  increase() {
-    this.quantity.update(q => q + 1);
-  }
-
-  decrease() {
-    this.quantity.update(q => q > 1 ? q - 1 : 1);
   }
 }

@@ -96,14 +96,6 @@ import { StoreService } from '../services/store.service';
                 <select formControlName="city" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#8FA67A]/50 appearance-none cursor-pointer">
                   <option value="" disabled>Selecciona tu ciudad</option>
                   <option value="Cali">Cali</option>
-                  <option value="Bogotá">Bogotá</option>
-                  <option value="Medellín">Medellín</option>
-                  <option value="Barranquilla">Barranquilla</option>
-                  <option value="Cartagena">Cartagena</option>
-                  <option value="Bucaramanga">Bucaramanga</option>
-                  <option value="Pereira">Pereira</option>
-                  <option value="Manizales">Manizales</option>
-                  <option value="Otra">Otra</option>
                 </select>
                 @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.hasError('required')) {
                   <span class="text-red-500 text-xs">Selecciona una ciudad</span>
@@ -178,7 +170,7 @@ export class CheckoutComponent {
   store = inject(StoreService);
   private fb: FormBuilder = inject(FormBuilder);
 
-  readonly cities = ['Cali', 'Bogotá', 'Medellín', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Pereira', 'Manizales', 'Otra'];
+  readonly cities = ['Cali'];
 
   checkoutForm: FormGroup = this.fb.group({
     name: ['', Validators.required],

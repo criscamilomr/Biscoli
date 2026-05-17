@@ -51,7 +51,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
       [class.backdrop-blur-md]="scrolled() || mobileMenuOpen()"
       [class.shadow-md]="scrolled() || mobileMenuOpen()"
       [class.py-2]="scrolled()"
-      [class.py-8]="!scrolled()"
+      [class.py-4]="!scrolled()"
       [class.opacity-0]="store.modalOpen()"
       [class.pointer-events-none]="store.modalOpen()">
       
@@ -65,10 +65,10 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
 
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex items-center gap-8">
-            <button (click)="navigate('inicio')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">INICIO</button>
-            <button (click)="navigate('cajas')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">ARMA TU CAJA</button>
-            <button (click)="navigate('ingredientes')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">INGREDIENTES</button>
-            <button (click)="navigate('faq')" class="text-[#4A5D4A] hover:text-[#8FA67A] font-bold tracking-wide transition-colors">FAQ</button>
+            <button (click)="navigate('inicio')" class="font-bold tracking-wide transition-colors" [class.text-white]="!scrolled() && store.currentView() === 'HOME'" [class.text-[#4A5D4A]]="scrolled() || store.currentView() !== 'HOME'" [class.hover:text-[#dde8d5]]="!scrolled() && store.currentView() === 'HOME'" [class.hover:text-[#8FA67A]]="scrolled() || store.currentView() !== 'HOME'">INICIO</button>
+            <button (click)="navigate('cajas')" class="font-bold tracking-wide transition-colors" [class.text-white]="!scrolled() && store.currentView() === 'HOME'" [class.text-[#4A5D4A]]="scrolled() || store.currentView() !== 'HOME'" [class.hover:text-[#dde8d5]]="!scrolled() && store.currentView() === 'HOME'" [class.hover:text-[#8FA67A]]="scrolled() || store.currentView() !== 'HOME'">ARMA TU CAJA</button>
+            <button (click)="navigate('ingredientes')" class="font-bold tracking-wide transition-colors" [class.text-white]="!scrolled() && store.currentView() === 'HOME'" [class.text-[#4A5D4A]]="scrolled() || store.currentView() !== 'HOME'" [class.hover:text-[#dde8d5]]="!scrolled() && store.currentView() === 'HOME'" [class.hover:text-[#8FA67A]]="scrolled() || store.currentView() !== 'HOME'">INGREDIENTES</button>
+            <button (click)="navigate('faq')" class="font-bold tracking-wide transition-colors" [class.text-white]="!scrolled() && store.currentView() === 'HOME'" [class.text-[#4A5D4A]]="scrolled() || store.currentView() !== 'HOME'" [class.hover:text-[#dde8d5]]="!scrolled() && store.currentView() === 'HOME'" [class.hover:text-[#8FA67A]]="scrolled() || store.currentView() !== 'HOME'">FAQ</button>
           </nav>
           
           <!-- Actions (Cart & Mobile Menu) -->
@@ -85,7 +85,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
             </button>
 
             <!-- Mobile Menu Button -->
-            <button (click)="toggleMenu()" class="md:hidden text-[#4A5D4A] p-2 focus:outline-none transition-transform active:scale-90">
+            <button (click)="toggleMenu()" class="md:hidden p-2 focus:outline-none transition-all active:scale-90" [class.text-white]="!scrolled() && store.currentView() === 'HOME' && !mobileMenuOpen()" [class.text-[#4A5D4A]]="scrolled() || store.currentView() !== 'HOME' || mobileMenuOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 @if (mobileMenuOpen()) {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
