@@ -7,22 +7,22 @@ import { StoreService } from '../services/store.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <footer class="bg-[#3A4A3A] text-[#dde8d5]/80 py-12 relative z-50 border-t border-white/10">
+    <footer class="bg-[#3A4A3A] text-[#F5EDE2]/80 py-12 relative z-50 border-t border-[#C4735B]/20">
       <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
         
         <div class="text-center md:text-left">
-          <h4 class="text-2xl font-serif text-[#8FA67A] font-bold mb-2">Biscoli</h4>
+          <h4 class="text-2xl font-serif text-[#C4735B] font-bold mb-2">Biscoli</h4>
           <p class="text-sm opacity-60 mb-4">© {{ year }} Biscoli Cookies. <br>Hecho con pasión y sin culpas.</p>
           
-          <div class="flex gap-4 text-xs font-bold text-[#8FA67A]/60 justify-center md:justify-start">
-            <button (click)="store.setView('TERMS')" class="hover:text-[#8FA67A] transition-colors uppercase">Términos</button>
+          <div class="flex gap-4 text-xs font-bold text-[#C4735B]/60 justify-center md:justify-start">
+            <button (click)="store.setView('TERMS')" class="hover:text-[#C4735B] transition-colors uppercase">Términos</button>
             <span>•</span>
-            <button (click)="store.setView('PRIVACY')" class="hover:text-[#8FA67A] transition-colors uppercase">Privacidad</button>
+            <button (click)="store.setView('PRIVACY')" class="hover:text-[#C4735B] transition-colors uppercase">Privacidad</button>
           </div>
         </div>
 
         <div class="flex flex-col items-center">
-            <span class="text-xs uppercase tracking-widest text-[#8FA67A]/80 mb-4 font-bold">Síguenos</span>
+            <span class="text-xs uppercase tracking-widest text-[#C4735B]/80 mb-4 font-bold">Síguenos</span>
             <div class="flex items-center gap-6">
                 <!-- Instagram -->
                 <a href="https://www.instagram.com/biscoli.co/" target="_blank" class="p-3 bg-white/5 rounded-full hover:scale-110 transition-all">
@@ -41,7 +41,7 @@ import { StoreService } from '../services/store.service';
                 </a>
             </div>
             
-            <a href="https://www.instagram.com/biscoli.co/" target="_blank" class="mt-4 text-sm font-bold text-[#8FA67A] hover:text-[#A3B88C]">biscoli.co</a>
+            <a href="https://www.instagram.com/biscoli.co/" target="_blank" class="mt-4 text-sm font-bold text-[#C4735B] hover:text-[#E8956C]">biscoli.co</a>
         </div>
 
       </div>
