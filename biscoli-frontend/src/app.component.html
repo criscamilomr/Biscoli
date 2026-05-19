@@ -1,0 +1,65 @@
+<!-- Background System -->
+<app-background-effects></app-background-effects>
+
+<!-- Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 px-4 py-4 transition-all duration-300" [class.bg-white-80]="scrolled()">
+  <div
+    class="max-w-6xl mx-auto flex justify-between items-center bg-white/30 backdrop-blur-md rounded-full px-6 py-3 border border-white/20 shadow-lg">
+    <!-- Brand -->
+    <div (click)="store.setView('HOME')" class="flex items-center gap-2 cursor-pointer select-none">
+      <img src="assets/icon.png" alt="Icon" class="w-8 h-8 object-contain">
+      <span class="text-xl text-[#3E2723] font-brand font-bold hidden md:block">Biscoli</span>
+    </div>
+
+    <!-- Cart Icon -->
+    <div (click)="store.setView('CHECKOUT')" class="relative cursor-pointer hover:scale-110 transition-transform">
+      <div class="bg-white p-2 rounded-full shadow-sm text-[#3E2723]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+      @if (store.cartCount() > 0) {
+      <span
+        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse shadow">
+        {{ store.cartCount() }}
+      </span>
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content Area -->
+<main class="relative z-10 pt-20">
+  @switch (store.currentView()) {
+  @case ('HOME') {
+  <app-home></app-home>
+  }
+  @case ('BUILDER') {
+  <app-box-builder></app-box-builder>
+  }
+  @case ('CHECKOUT') {
+  <app-checkout></app-checkout>
+  }
+  @case ('TERMS') {
+  <app-terms></app-terms>
+  }
+  @case ('PRIVACY') {
+  <app-privacy></app-privacy>
+  }
+  @case ('NOT_FOUND') {
+  <app-not-found></app-not-found>
+  }
+  }
+</main>
+
+<!-- Footer -->
+<footer class="bg-[#3E2723] text-amber-100 py-8 text-center relative z-10 mt-auto">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex items-center justify-center gap-2 mb-4">
+      <span class="font-brand text-2xl">Biscoli</span>
+    </div>
+    <p class="text-sm opacity-60">© 2024 Biscoli Cookies. Hecho con amor.</p>
+    <p class="text-xs opacity-40 mt-2">Galletas veganas, sin gluten y sin azúcar.</p>
+  </div>
+</footer>
