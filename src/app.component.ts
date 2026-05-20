@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, effect, untracked }
 import { CommonModule } from '@angular/common';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { StoreService } from './services/store.service';
+import { PaymentService } from './services/payment.service';
 import { BackgroundEffectsComponent } from './components/background-effects.component';
 import { HomeComponent } from './components/home.component';
 import { BoxBuilderComponent } from './components/box-builder.component';
@@ -14,6 +15,7 @@ import { PrivacyComponent } from './components/privacy.component';
 import { NotFoundComponent } from './components/not-found.component';
 import { AdminLoginComponent } from './components/admin/admin-login.component';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard.component';
+import { PaymentStatusModalComponent, PaymentModalState } from './components/payment-status-modal.component';
 
 
 @Component({
@@ -32,7 +34,8 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
     PrivacyComponent,
     NotFoundComponent,
     AdminLoginComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    PaymentStatusModalComponent
   ],
   animations: [
     trigger('fadeIn', [
@@ -143,6 +146,18 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
          </svg>
       </button>
     </div>
+
+    <!-- Payment Return Modal (Bancolombia/PSE redirect) -->
+    @if (showReturnModal()) {
+      <app-payment-status-modal
+        [state]="returnModalState()"
+        [message]="returnModalMessage()"
+        [reference]="returnModalReference()"
+        (goHome)="onReturnModalGoHome()"
+        (retry)="onReturnModalClose()"
+        (close)="onReturnModalClose()"
+      />
+    }
   `,
   styles: [`
     .bg-white_95 { background-color: rgba(255, 255, 255, 0.95); }
@@ -159,15 +174,25 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard.comp
 })
 export class AppComponent {
   store = inject(StoreService);
+  private paymentService = inject(PaymentService);
   scrolled = signal(false);
   mobileMenuOpen = signal(false);
   cartBump = signal(false);
+
+  // Return modal state (for Bancolombia/PSE redirects)
+  showReturnModal = signal(false);
+  returnModalState = signal<PaymentModalState>('processing');
+  returnModalMessage = signal('');
+  returnModalReference = signal('');
 
   constructor() {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', () => {
         this.scrolled.set(window.scrollY > 20);
       });
+
+      // Detect return from Bancolombia/PSE payment redirect
+      this.checkPaymentReturn();
     }
 
     // Effect to trigger bump animation on cart change
@@ -190,6 +215,54 @@ export class AppComponent {
         }
       });
     });
+  }
+
+  /**
+   * Check if the user is returning from a Bancolombia/PSE payment redirect.
+   * Wompi appends ?id=TRANSACTION_ID to the redirect URL.
+   */
+  private async checkPaymentReturn() {
+    const params = new URLSearchParams(window.location.search);
+    const transactionId = params.get('id');
+    if (!transactionId) return;
+
+    // Clean the URL to remove the ?id= parameter
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+
+    // Show processing modal
+    this.showReturnModal.set(true);
+    this.returnModalState.set('processing');
+    this.returnModalMessage.set('Verificando estado de tu pago...');
+
+    try {
+      const result = await this.paymentService.pollTransactionUntilFinal(transactionId, 30);
+
+      if (result.data.status === 'APPROVED') {
+        this.returnModalState.set('success');
+        this.returnModalMessage.set('¡Tu pedido ha sido recibido! Pronto recibirás un mensaje con los detalles de tu entrega.');
+        this.returnModalReference.set(result.data.reference);
+      } else if (result.data.status === 'DECLINED') {
+        this.returnModalState.set('error');
+        this.returnModalMessage.set(`Pago rechazado: ${result.data.status_message || 'Intenta con otro método de pago.'}`);
+      } else {
+        this.returnModalState.set('error');
+        this.returnModalMessage.set(`Estado del pago: ${result.data.status_message || result.data.status}`);
+      }
+    } catch (err: any) {
+      this.returnModalState.set('error');
+      this.returnModalMessage.set('No pudimos verificar el estado de tu pago. Contacta soporte si necesitas ayuda.');
+    }
+  }
+
+  onReturnModalGoHome() {
+    this.showReturnModal.set(false);
+    this.store.clearCart();
+    this.store.setView('HOME');
+  }
+
+  onReturnModalClose() {
+    this.showReturnModal.set(false);
   }
 
   toggleMenu() {

@@ -29,7 +29,7 @@ export interface WompiTokenResponse {
   };
 }
 
-export type PaymentMethodType = 'CARD' | 'NEQUI' | 'BANCOLOMBIA_TRANSFER';
+export type PaymentMethodType = 'CARD' | 'NEQUI' | 'BANCOLOMBIA_TRANSFER' | 'PSE' | 'DAVIPLATA';
 
 export interface PaymentMethodCard {
   type: 'CARD';
@@ -40,6 +40,7 @@ export interface PaymentMethodCard {
 export interface PaymentMethodNequi {
   type: 'NEQUI';
   phone_number: string;
+  sandbox_status?: string;
 }
 
 export interface PaymentMethodBancolombia {
@@ -50,7 +51,29 @@ export interface PaymentMethodBancolombia {
   sandbox_status?: string; // For sandbox testing
 }
 
-export type PaymentMethodPayload = PaymentMethodCard | PaymentMethodNequi | PaymentMethodBancolombia;
+export interface PaymentMethodPSE {
+  type: 'PSE';
+  user_type: string; // "0" for natural person, "1" for juridical person
+  user_legal_id: string;
+  user_legal_id_type: string; // CC, NIT, CE, etc.
+  financial_institution_code: string;
+  payment_description: string;
+}
+
+export interface PaymentMethodDaviplata {
+  type: 'DAVIPLATA';
+  phone_number: string;
+  user_legal_id: string;
+  user_legal_id_type: string; // CC, CE, TI
+  sandbox_status?: string;
+}
+
+export interface FinancialInstitution {
+  financial_institution_code: string;
+  financial_institution_name: string;
+}
+
+export type PaymentMethodPayload = PaymentMethodCard | PaymentMethodNequi | PaymentMethodBancolombia | PaymentMethodPSE | PaymentMethodDaviplata;
 
 export interface OrderItemDetail {
   name: string;
@@ -105,6 +128,21 @@ export interface TransactionResponse {
 })
 export class PaymentService {
   private http = inject(HttpClient);
+
+  /**
+   * Fetch available PSE financial institutions from Wompi.
+   */
+  async getFinancialInstitutions(): Promise<FinancialInstitution[]> {
+    const url = `${environment.wompi.apiUrl}/pse/financial_institutions`;
+    const response = await firstValueFrom(
+      this.http.get<{ data: FinancialInstitution[] }>(url, {
+        headers: {
+          'Authorization': `Bearer ${environment.wompi.publicKey}`
+        }
+      })
+    );
+    return response.data;
+  }
 
   /**
    * Tokenize a credit/debit card directly with Wompi (PCI-compliant).
