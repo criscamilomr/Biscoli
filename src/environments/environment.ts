@@ -13,5 +13,5 @@ export const environment = {
         publicKey: "pub_prod_wompi", // Reemplazar con la llave pública de Wompi de producción
         apiUrl: "https://production.wompi.co/v1"
     },
-    apiBaseUrl: "https://tu-dominio-backend.com/api"
+    apiBaseUrl: "https://biscoli-backend-249895493544.europe-west1.run.app/api"
 };
