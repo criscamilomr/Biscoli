@@ -149,33 +149,52 @@
           <!-- Payment Method Selector -->
           <h3 class="text-2xl font-black text-[#3A4A3A] flex items-center gap-2"><span>💳</span> Método de Pago</h3>
 
-          <div class="grid grid-cols-3 gap-3">
+          <!-- Payment tabs: scrollable on mobile -->
+          <div class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
             <!-- Card Tab -->
             <button type="button" (click)="selectPaymentMethod('CARD')"
-              class="payment-tab" [class.active]="selectedPaymentMethod() === 'CARD'"
+              class="payment-tab min-w-[5.5rem] snap-start" [class.active]="selectedPaymentMethod() === 'CARD'"
               [style.borderColor]="selectedPaymentMethod() === 'CARD' ? '#5C2E35' : ''"
               [style.backgroundColor]="selectedPaymentMethod() === 'CARD' ? '#F5EDE2' : ''">
-              <span class="text-3xl">💳</span>
-              <span class="font-bold text-sm text-[#3A4A3A]">Tarjeta</span>
-              <span class="text-[10px] text-gray-500 leading-tight">Crédito / Débito</span>
+              <span class="text-2xl">💳</span>
+              <span class="font-bold text-xs text-[#3A4A3A]">Tarjeta</span>
+              <span class="text-[9px] text-gray-500 leading-tight">Crédito / Débito</span>
             </button>
             <!-- Nequi Tab -->
             <button type="button" (click)="selectPaymentMethod('NEQUI')"
-              class="payment-tab" [class.active]="selectedPaymentMethod() === 'NEQUI'"
+              class="payment-tab min-w-[5.5rem] snap-start" [class.active]="selectedPaymentMethod() === 'NEQUI'"
               [style.borderColor]="selectedPaymentMethod() === 'NEQUI' ? '#5C2E35' : ''"
               [style.backgroundColor]="selectedPaymentMethod() === 'NEQUI' ? '#F5EDE2' : ''">
-              <img src="assets/nequi-icono.png" alt="Nequi" class="w-8 h-8 object-contain">
-              <span class="font-bold text-sm text-[#3A4A3A]">Nequi</span>
-              <span class="text-[10px] text-gray-500 leading-tight">Desde tu celular</span>
+              <img src="assets/nequi-icono.png" alt="Nequi" class="w-7 h-7 object-contain">
+              <span class="font-bold text-xs text-[#3A4A3A]">Nequi</span>
+              <span class="text-[9px] text-gray-500 leading-tight">Desde tu celular</span>
             </button>
             <!-- Bancolombia Tab -->
             <button type="button" (click)="selectPaymentMethod('BANCOLOMBIA_TRANSFER')"
-              class="payment-tab" [class.active]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER'"
+              class="payment-tab min-w-[5.5rem] snap-start" [class.active]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER'"
               [style.borderColor]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER' ? '#5C2E35' : ''"
               [style.backgroundColor]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER' ? '#F5EDE2' : ''">
-              <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-8 h-8 object-contain">
-              <span class="font-bold text-sm text-[#3A4A3A]">Bancolombia</span>
-              <span class="text-[10px] text-gray-500 leading-tight">Transferencia</span>
+              <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-7 h-7 object-contain">
+              <span class="font-bold text-xs text-[#3A4A3A]">Bancolombia</span>
+              <span class="text-[9px] text-gray-500 leading-tight">Transferencia</span>
+            </button>
+            <!-- PSE Tab -->
+            <button type="button" (click)="selectPaymentMethod('PSE')"
+              class="payment-tab min-w-[5.5rem] snap-start" [class.active]="selectedPaymentMethod() === 'PSE'"
+              [style.borderColor]="selectedPaymentMethod() === 'PSE' ? '#5C2E35' : ''"
+              [style.backgroundColor]="selectedPaymentMethod() === 'PSE' ? '#F5EDE2' : ''">
+              <img src="assets/pse-icono.png" alt="PSE" class="w-7 h-7 object-contain">
+              <span class="font-bold text-xs text-[#3A4A3A]">PSE</span>
+              <span class="text-[9px] text-gray-500 leading-tight">Débito bancario</span>
+            </button>
+            <!-- Daviplata Tab -->
+            <button type="button" (click)="selectPaymentMethod('DAVIPLATA')"
+              class="payment-tab min-w-[5.5rem] snap-start" [class.active]="selectedPaymentMethod() === 'DAVIPLATA'"
+              [style.borderColor]="selectedPaymentMethod() === 'DAVIPLATA' ? '#5C2E35' : ''"
+              [style.backgroundColor]="selectedPaymentMethod() === 'DAVIPLATA' ? '#F5EDE2' : ''">
+              <img src="assets/daviplata-icono.png" alt="Daviplata" class="w-7 h-7 object-contain">
+              <span class="font-bold text-xs text-[#3A4A3A]">Daviplata</span>
+              <span class="text-[9px] text-gray-500 leading-tight">Desde tu celular</span>
             </button>
           </div>
 
@@ -184,6 +203,7 @@
             <!-- CARD Fields -->
             @if (selectedPaymentMethod() === 'CARD') {
               <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <!-- Card Number -->
                 <div class="relative">
                   <label class="block text-sm font-bold text-gray-700 mb-1">Número de Tarjeta</label>
                   <input type="text" formControlName="cardNumber" (input)="onCardNumberInput($event)" class="w-full bg-white border border-gray-200 rounded-lg p-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 tracking-widest" placeholder="0000 0000 0000 0000" maxlength="23">
@@ -198,7 +218,16 @@
                     <span class="text-red-500 text-xs">Número de tarjeta inválido</span>
                   }
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <!-- Cardholder Name -->
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Nombre en la Tarjeta</label>
+                  <input type="text" formControlName="cardHolderName" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 uppercase" placeholder="Como aparece en la tarjeta">
+                  @if (checkoutForm.get('cardHolderName')?.touched && checkoutForm.get('cardHolderName')?.invalid) {
+                    <span class="text-red-500 text-xs">Requerido</span>
+                  }
+                </div>
+                <!-- Exp / CVC / Installments -->
+                <div class="grid grid-cols-3 gap-3">
                   <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">Vencimiento</label>
                     <input type="text" formControlName="cardExp" (input)="onCardExpInput($event)" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 text-center tracking-widest" placeholder="MM/AA" maxlength="5">
@@ -206,6 +235,14 @@
                   <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">CVC</label>
                     <input type="text" formControlName="cardCvc" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 text-center tracking-widest" placeholder="123" maxlength="4">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Cuotas</label>
+                    <select formControlName="cardInstallments" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 text-center appearance-none cursor-pointer">
+                      @for (opt of installmentOptions; track opt) {
+                        <option [value]="opt">{{ opt }}</option>
+                      }
+                    </select>
                   </div>
                 </div>
                 <p class="text-xs text-gray-400 flex items-center gap-1">🔒 Tus datos se envían cifrados directamente a Wompi.</p>
@@ -240,6 +277,100 @@
                 </div>
               </div>
             }
+
+            <!-- PSE Fields -->
+            @if (selectedPaymentMethod() === 'PSE') {
+              <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <!-- Bank Selector -->
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Banco</label>
+                  @if (pseLoading()) {
+                    <div class="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-400 text-sm flex items-center gap-2">
+                      <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      Cargando bancos...
+                    </div>
+                  } @else {
+                    <select formControlName="pseBank" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 appearance-none cursor-pointer">
+                      <option value="" disabled>Selecciona tu banco</option>
+                      @for (bank of pseInstitutions(); track bank.financial_institution_code) {
+                        <option [value]="bank.financial_institution_code">{{ bank.financial_institution_name }}</option>
+                      }
+                    </select>
+                  }
+                  @if (checkoutForm.get('pseBank')?.touched && checkoutForm.get('pseBank')?.invalid) {
+                    <span class="text-red-500 text-xs">Selecciona un banco</span>
+                  }
+                </div>
+                <!-- User Type -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Tipo de persona</label>
+                    <select formControlName="pseUserType" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 appearance-none cursor-pointer">
+                      <option value="0">Natural</option>
+                      <option value="1">Jurídica</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Tipo de documento</label>
+                    <select formControlName="pseDocType" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 appearance-none cursor-pointer">
+                      @for (dt of docTypes; track dt.value) {
+                        <option [value]="dt.value">{{ dt.label }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+                <!-- Document Number -->
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Número de documento</label>
+                  <input type="text" formControlName="pseDocNumber" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Ej: 1234567890">
+                  @if (checkoutForm.get('pseDocNumber')?.touched && checkoutForm.get('pseDocNumber')?.invalid) {
+                    <span class="text-red-500 text-xs">Número de documento requerido</span>
+                  }
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p class="text-blue-700 text-sm font-medium">
+                    <span class="font-black text-blue-800 mr-1">PSE</span>
+                    Serás redirigido a la página de tu banco para autorizar el pago.
+                  </p>
+                </div>
+              </div>
+            }
+
+            <!-- DAVIPLATA Fields -->
+            @if (selectedPaymentMethod() === 'DAVIPLATA') {
+              <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Número Daviplata</label>
+                  <input type="tel" formControlName="daviplataPhone" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="300 123 4567" maxlength="10">
+                  @if (checkoutForm.get('daviplataPhone')?.touched && checkoutForm.get('daviplataPhone')?.invalid) {
+                    <span class="text-red-500 text-xs">Número Daviplata válido requerido (10 dígitos)</span>
+                  }
+                </div>
+                <!-- Document Type + Number -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Tipo de documento</label>
+                    <select formControlName="daviplataDocType" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 appearance-none cursor-pointer">
+                      <option value="CC">Cédula de Ciudadanía</option>
+                      <option value="CE">Cédula de Extranjería</option>
+                      <option value="TI">Tarjeta de Identidad</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Número de documento</label>
+                    <input type="text" formControlName="daviplataDocNumber" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Ej: 1234567890">
+                    @if (checkoutForm.get('daviplataDocNumber')?.touched && checkoutForm.get('daviplataDocNumber')?.invalid) {
+                      <span class="text-red-500 text-xs">Número de documento requerido</span>
+                    }
+                  </div>
+                </div>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p class="text-red-700 text-sm font-medium">
+                    <img src="assets/daviplata-icono.png" alt="Daviplata" class="w-5 h-5 inline-block -mt-1 mr-1">Recibirás una notificación en tu app Daviplata para confirmar el pago.
+                  </p>
+                </div>
+              </div>
+            }
           </div>
 
           <!-- Error Message -->
@@ -256,11 +387,13 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ processingMessage() || 'Procesando...' }}
+              Procesando...
             } @else {
               @if (selectedPaymentMethod() === 'CARD') { <span class="text-xl">💳</span> }
               @else if (selectedPaymentMethod() === 'NEQUI') { <img src="assets/nequi-icono.png" alt="Nequi" class="w-6 h-6 object-contain"> }
-              @else { <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-6 h-6 object-contain"> }
+              @else if (selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER') { <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-6 h-6 object-contain"> }
+              @else if (selectedPaymentMethod() === 'PSE') { <img src="assets/pse-icono.png" alt="PSE" class="w-6 h-6 object-contain"> }
+              @else if (selectedPaymentMethod() === 'DAVIPLATA') { <img src="assets/daviplata-icono.png" alt="Daviplata" class="w-6 h-6 object-contain"> }
               Pagar {{ store.cartTotal() | currency:'$':'symbol':'1.0-0' }}
             }
           </button>
@@ -281,3 +414,15 @@
     }
   }
 </div>
+
+<!-- Payment Status Modal -->
+@if (showPaymentModal()) {
+  <app-payment-status-modal
+    [state]="paymentModalState()"
+    [message]="paymentModalMessage()"
+    [reference]="paymentModalReference()"
+    (goHome)="onModalGoHome()"
+    (retry)="onModalRetry()"
+    (close)="onModalClose()"
+  />
+}

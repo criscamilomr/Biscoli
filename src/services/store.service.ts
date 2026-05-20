@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { APP_IMAGES } from '../assets/images';
 import { Firestore, collection, collectionData, doc, updateDoc, addDoc, setDoc, docData } from '@angular/fire/firestore';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -31,17 +31,43 @@ export type ViewState = 'HOME' | 'BUILDER' | 'CHECKOUT' | 'SUCCESS' | 'INGREDIEN
   providedIn: 'root'
 })
 export class StoreService {
+  private static readonly CART_STORAGE_KEY = 'biscoli_cart';
   private firestore = inject(Firestore);
 
   // State
   readonly currentView = signal<ViewState>('HOME');
   readonly modalOpen = signal<boolean>(false);
   readonly selectedBoxSize = signal<number>(0);
-  readonly cart = signal<BoxItem[]>([]);
+  readonly cart = signal<BoxItem[]>(StoreService.loadCartFromStorage());
   readonly currentBuilderFlavors = signal<Flavor[]>([]);
 
   // Firestore Collection
   private flavorsCollection = collection(this.firestore, 'flavors');
+
+  constructor() {
+    // Persist cart changes to localStorage
+    effect(() => {
+      const cartItems = this.cart();
+      try {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(StoreService.CART_STORAGE_KEY, JSON.stringify(cartItems));
+        }
+      } catch { /* silently ignore storage errors */ }
+    });
+  }
+
+  private static loadCartFromStorage(): BoxItem[] {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem(StoreService.CART_STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      }
+    } catch { /* silently ignore parse errors */ }
+    return [];
+  }
 
   // Data - Reactive from Firestore
   // We use toSignal to convert the Observable to a Signal. Initial value is empty array.
@@ -172,6 +198,11 @@ export class StoreService {
 
   clearCart() {
     this.cart.set([]);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(StoreService.CART_STORAGE_KEY);
+      }
+    } catch { /* silently ignore */ }
   }
 
   async toggleStock(flavorId: string, currentStatus: boolean) {
