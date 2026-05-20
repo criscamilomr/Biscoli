@@ -10,7 +10,7 @@ export const environment = {
         measurementId: "G-Z6GZPPCHNE"
     },
     wompi: {
-        publicKey: "pub_prod_wompi", // Reemplazar con la llave pública de Wompi de producción
+        publicKey: "pub_prod_mGYKoSK9qzRJP80kgpckMUgYApSKK8Gg",
         apiUrl: "https://production.wompi.co/v1"
     },
     apiBaseUrl: "https://biscoli-backend-249895493544.europe-west1.run.app/api"
