@@ -237,12 +237,30 @@ export class CheckoutComponent {
 
   private buildOrderDetails(formVal: any) {
     const cart = this.store.cart();
-    const items = cart.flatMap(item =>
-      item.flavors.map(flavor => ({
-        name: `${item.size === 1 ? '' : 'Caja x' + item.size + ' - '}${flavor.name}`,
-        quantity: item.quantity
-      }))
-    );
+    const items = cart.map(item => {
+      if (item.size === 1) {
+        return {
+          name: item.flavors[0]?.name || 'Galleta individual',
+          quantity: item.quantity
+        };
+      } else {
+        // Count occurrences of each flavor in the box
+        const flavorCounts: Record<string, number> = {};
+        item.flavors.forEach(flavor => {
+          flavorCounts[flavor.name] = (flavorCounts[flavor.name] || 0) + 1;
+        });
+
+        // Format as "2x Sabor, Sabor2"
+        const flavorsStr = Object.entries(flavorCounts)
+          .map(([name, count]) => count > 1 ? `${count}x ${name}` : name)
+          .join(', ');
+
+        return {
+          name: `Caja x${item.size} (${flavorsStr})`,
+          quantity: item.quantity
+        };
+      }
+    });
 
     return {
       customer_name: formVal.name,

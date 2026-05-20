@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreService } from '../services/store.service';
+import { StoreService, Flavor } from '../services/store.service';
 
 @Component({
   selector: 'app-box-builder',
@@ -31,7 +31,7 @@ import { StoreService } from '../services/store.service';
               <span>Ir al carrito 🛒</span>
              </button>
            } @else {
-             <button [disabled]="!isFull()" (click)="addToCart()" class="bg-[#5C2E35] disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-full font-black shadow-lg hover:bg-[#7A3B44] transition-all text-sm flex items-center gap-2 tracking-wide uppercase">
+             <button [disabled]="!isFull()" (click)="addToCart()" class="bg-[#5C2E35] disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-full font-black shadow-lg hover:bg-[#7A3B44] transition-all text-sm flex items-center gap-2 tracking-wide uppercase" [class.animate-pop-in]="isFull()">
               <span>{{ currentPrice() | currency:'$':'symbol':'1.0-0' }}</span>
               <span class="hidden md:inline">| Agregar</span>
              </button>
@@ -95,7 +95,7 @@ import { StoreService } from '../services/store.service';
                     </div>
                   </div>
                 } @else {
-                  <button [disabled]="!isFull()" (click)="addToCart()" class="w-full mt-6 bg-[#C4735B] disabled:bg-gray-400 disabled:text-gray-200 text-white py-4 rounded-xl font-black shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 group uppercase tracking-wide">
+                  <button [disabled]="!isFull()" (click)="addToCart()" class="w-full mt-6 bg-[#C4735B] disabled:bg-gray-400 disabled:text-gray-200 text-white py-4 rounded-xl font-black shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 group uppercase tracking-wide" [class.animate-pop-in]="isFull()">
                     @if (isFull()) {
                       <span>¡Listo! Agregar al Carrito</span>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
@@ -146,7 +146,7 @@ import { StoreService } from '../services/store.service';
                           </div>
                         }
                       <div class="mt-auto">
-                        <button (click)="store.addFlavorToBox(flavor)" [disabled]="isFull() || flavor.available === false" class="bg-[#5C2E35] hover:bg-[#7A3B44] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed w-fit">
+                        <button (click)="addFlavor(flavor)" [disabled]="isFull() || flavor.available === false" class="bg-[#5C2E35] hover:bg-[#7A3B44] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed w-fit">
                           @if (flavor.available === false) {
                             <span>No disponible</span>
                           } @else {
@@ -215,6 +215,13 @@ export class BoxBuilderComponent {
 
   countInBox(flavorId: string): number {
     return this.store.currentBuilderFlavors().filter(f => f.id === flavorId).length;
+  }
+
+  addFlavor(flavor: Flavor) {
+    if (this.isSuccess()) {
+      this.isSuccess.set(false);
+    }
+    this.store.addFlavorToBox(flavor);
   }
 
   addToCart() {
