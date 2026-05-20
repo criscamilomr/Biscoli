@@ -1,4 +1,8 @@
 import {
+  partition,
+  race
+} from "./chunk-64UGZ4AE.js";
+import {
   audit,
   auditTime,
   buffer,
@@ -8,10 +12,10 @@ import {
   bufferWhen,
   catchError,
   combineAll,
-  combineLatest,
+  combineLatest2 as combineLatest,
   combineLatestAll,
   combineLatestWith,
-  concat,
+  concat2 as concat,
   concatAll,
   concatMap,
   concatMapTo,
@@ -57,15 +61,13 @@ import {
   min,
   multicast,
   observeOn,
-  onErrorResumeNext,
+  onErrorResumeNext2 as onErrorResumeNext,
   pairwise,
-  partition,
   pluck,
   publish,
   publishBehavior,
   publishLast,
   publishReplay,
-  race,
   raceWith,
   reduce,
   refCount,
@@ -109,10 +111,10 @@ import {
   windowToggle,
   windowWhen,
   withLatestFrom,
-  zip,
+  zip2 as zip,
   zipAll,
   zipWith
-} from "./chunk-26NX2EKJ.js";
+} from "./chunk-WS3URHHF.js";
 import "./chunk-GOMI4DH3.js";
 export {
   audit,

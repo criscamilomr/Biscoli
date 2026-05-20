@@ -148,7 +148,7 @@ export class StoreService {
       };
       this.cart.update(c => [...c, newItem]);
       this.currentBuilderFlavors.set([]);
-      this.setView('HOME');
+      // this.setView('HOME'); Removed to allow custom success state in builder
     }
   }
 

@@ -8,5 +8,10 @@ export const environment = {
         messagingSenderId: "548402421019",
         appId: "1:548402421019:web:5a54d139701bfa628747be",
         measurementId: "G-Z6GZPPCHNE"
-    }
+    },
+    wompi: {
+        publicKey: "pub_prod_wompi", // Reemplazar con la llave pública de Wompi de producción
+        apiUrl: "https://production.wompi.co/v1"
+    },
+    apiBaseUrl: "https://tu-dominio-backend.com/api"
 };
