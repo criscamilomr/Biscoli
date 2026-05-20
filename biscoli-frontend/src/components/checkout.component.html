@@ -1,0 +1,283 @@
+<div class="min-h-screen pt-24 pb-12 px-4 max-w-2xl mx-auto">
+  
+  <button (click)="store.setView('HOME')" class="mb-6 text-[#5C2E35] hover:text-[#B5686F] transition-colors flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
+    Seguir comprando
+  </button>
+
+  <h2 class="text-4xl font-black text-[#3A4A3A] mb-8 tracking-tight">Tu Carrito</h2>
+
+  @if (store.cart().length === 0) {
+    <div class="bg-white/80 rounded-[2rem] p-10 text-center shadow-lg border border-white">
+      <div class="text-7xl mb-6 text-[#5C2E35]">🍪</div>
+      <p class="text-2xl text-[#3A4A3A] font-black mb-2">Tu carrito está vacío</p>
+      <p class="text-[#C4735B] mb-8 text-lg font-medium">¡Corre a llenarlo de galletas!</p>
+      <button (click)="store.setView('HOME')" class="bg-[#5C2E35] text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-[#7A3B44] transition-all">Ver Menú</button>
+    </div>
+  } @else {
+    <!-- Cart Items -->
+    <div class="space-y-4 mb-8">
+      @for (item of store.cart(); track item.id) {
+        <div class="bg-white rounded-2xl p-5 shadow-md flex justify-between items-start relative overflow-hidden group border border-gray-50">
+          <button (click)="store.removeFromCart(item.id)" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 p-1 z-10 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+          </button>
+          <div>
+            <h3 class="font-black text-xl text-[#3A4A3A] mb-3">
+              <span *ngIf="item.quantity > 1" class="text-[#C4735B] mr-1">{{item.quantity}}x</span>
+              {{ item.size === 1 ? 'Galleta Individual' : 'Caja x' + item.size }}
+            </h3>
+            
+            <!-- Cookie Images Container -->
+            <div class="flex flex-wrap gap-3 mb-2">
+              @for (flavor of item.flavors; track $index) {
+                <div class="flex flex-col items-center gap-1 w-14">
+                  <div class="w-14 h-14 rounded-full border-2 border-[#E8D5C0] shadow-md overflow-hidden bg-gray-50 flex-shrink-0">
+                    @if (flavor.image) {
+                      <img [src]="flavor.image" [alt]="flavor.name" class="w-full h-full object-cover">
+                    } @else {
+                      <div [class]="'w-full h-full ' + flavor.color"></div>
+                    }
+                  </div>
+                  <span class="text-[10px] text-gray-500 font-bold text-center leading-tight line-clamp-2">{{flavor.name}}</span>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="text-right flex flex-col justify-end h-full pt-8">
+            <span class="font-black text-2xl text-[#3A4A3A]">{{ (item.price * item.quantity) | currency:'$':'symbol':'1.0-0' }}</span>
+            @if (item.quantity > 1) {
+               <span class="text-xs text-gray-400 font-medium">{{ item.price | currency:'$':'symbol':'1.0-0' }} c/u</span>
+            }
+          </div>
+        </div>
+      }
+      
+      <!-- Totals -->
+      <div class="bg-white/60 p-6 rounded-2xl border border-white/50 backdrop-blur-sm space-y-2">
+        <div class="flex justify-between items-center text-gray-600">
+          <span class="font-bold">Subtotal</span>
+          <span class="font-bold">{{ store.subtotal() | currency:'$':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="flex justify-between items-center text-gray-600">
+          <span class="font-bold">Envío</span>
+          <span class="font-bold">{{ store.shippingFee() | currency:'$':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="h-px bg-gray-200 my-2"></div>
+        <div class="flex justify-between items-center">
+          <span class="text-2xl font-black text-[#3A4A3A]">Total</span>
+          <span class="text-3xl font-black text-[#3A4A3A]">{{ store.cartTotal() | currency:'$':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    @if (store.storeConfig().isOpen) {
+      <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100">
+        <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()" class="space-y-6">
+          
+          <!-- Shipping Section -->
+          <h3 class="text-2xl font-black text-[#3A4A3A] flex items-center gap-2"><span>📦</span> Datos de Envío</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Nombre</label>
+              <input type="text" formControlName="name" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Tu nombre">
+              @if (checkoutForm.get('name')?.touched && checkoutForm.get('name')?.invalid) {
+                <span class="text-red-500 text-xs">Requerido</span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+              <input type="email" formControlName="email" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="tu@email.com">
+              @if (checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid) {
+                <span class="text-red-500 text-xs">Email válido requerido</span>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Teléfono</label>
+              <input type="tel" formControlName="phone" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="300 123 4567">
+              @if (checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid) {
+                <span class="text-red-500 text-xs">Teléfono válido requerido (10 dígitos)</span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Ciudad</label>
+              <select formControlName="city" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 appearance-none cursor-pointer">
+                <option value="" disabled>Selecciona tu ciudad</option>
+                <option value="Cali">Cali</option>
+              </select>
+              @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.hasError('required')) {
+                <span class="text-red-500 text-xs">Selecciona una ciudad</span>
+              }
+              @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.hasError('onlyCali')) {
+                <div class="mt-2 bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2 animate-fade-in">
+                  <span class="text-lg">😔</span>
+                  <p class="text-red-600 text-sm font-medium">Lo sentimos, por el momento solo hacemos entregas en <strong>Cali</strong>.</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Dirección</label>
+              <input type="text" formControlName="address" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Calle 123 # 45-67">
+              @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
+                <span class="text-red-500 text-xs">Requerido</span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Barrio</label>
+              <input type="text" formControlName="neighborhood" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Ej: Ciudad Jardín">
+              @if (checkoutForm.get('neighborhood')?.touched && checkoutForm.get('neighborhood')?.invalid) {
+                <span class="text-red-500 text-xs">Requerido</span>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Notas (Opcional)</label>
+            <textarea formControlName="notes" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="Ej: Dejar en portería"></textarea>
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px bg-gray-200"></div>
+
+          <!-- Payment Method Selector -->
+          <h3 class="text-2xl font-black text-[#3A4A3A] flex items-center gap-2"><span>💳</span> Método de Pago</h3>
+
+          <div class="grid grid-cols-3 gap-3">
+            <!-- Card Tab -->
+            <button type="button" (click)="selectPaymentMethod('CARD')"
+              class="payment-tab" [class.active]="selectedPaymentMethod() === 'CARD'"
+              [style.borderColor]="selectedPaymentMethod() === 'CARD' ? '#5C2E35' : ''"
+              [style.backgroundColor]="selectedPaymentMethod() === 'CARD' ? '#F5EDE2' : ''">
+              <span class="text-3xl">💳</span>
+              <span class="font-bold text-sm text-[#3A4A3A]">Tarjeta</span>
+              <span class="text-[10px] text-gray-500 leading-tight">Crédito / Débito</span>
+            </button>
+            <!-- Nequi Tab -->
+            <button type="button" (click)="selectPaymentMethod('NEQUI')"
+              class="payment-tab" [class.active]="selectedPaymentMethod() === 'NEQUI'"
+              [style.borderColor]="selectedPaymentMethod() === 'NEQUI' ? '#5C2E35' : ''"
+              [style.backgroundColor]="selectedPaymentMethod() === 'NEQUI' ? '#F5EDE2' : ''">
+              <img src="assets/nequi-icono.png" alt="Nequi" class="w-8 h-8 object-contain">
+              <span class="font-bold text-sm text-[#3A4A3A]">Nequi</span>
+              <span class="text-[10px] text-gray-500 leading-tight">Desde tu celular</span>
+            </button>
+            <!-- Bancolombia Tab -->
+            <button type="button" (click)="selectPaymentMethod('BANCOLOMBIA_TRANSFER')"
+              class="payment-tab" [class.active]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER'"
+              [style.borderColor]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER' ? '#5C2E35' : ''"
+              [style.backgroundColor]="selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER' ? '#F5EDE2' : ''">
+              <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-8 h-8 object-contain">
+              <span class="font-bold text-sm text-[#3A4A3A]">Bancolombia</span>
+              <span class="text-[10px] text-gray-500 leading-tight">Transferencia</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Payment Fields -->
+          <div class="animate-fade-in">
+            <!-- CARD Fields -->
+            @if (selectedPaymentMethod() === 'CARD') {
+              <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <div class="relative">
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Número de Tarjeta</label>
+                  <input type="text" formControlName="cardNumber" (input)="onCardNumberInput($event)" class="w-full bg-white border border-gray-200 rounded-lg p-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 tracking-widest" placeholder="0000 0000 0000 0000" maxlength="23">
+                  @if (detectedCardType() === 'visa') {
+                    <img src="assets/visa-icono.png" alt="Visa" class="absolute right-3 top-9 w-8 h-8 object-contain">
+                  } @else if (detectedCardType() === 'mastercard') {
+                    <img src="assets/mastercard-icono.png" alt="Mastercard" class="absolute right-3 top-9 w-8 h-8 object-contain">
+                  } @else if (detectedCardType() === 'amex') {
+                    <img src="assets/amex-icono.png" alt="Amex" class="absolute right-3 top-9 w-8 h-8 object-contain">
+                  }
+                  @if (checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid) {
+                    <span class="text-red-500 text-xs">Número de tarjeta inválido</span>
+                  }
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Vencimiento</label>
+                    <input type="text" formControlName="cardExp" (input)="onCardExpInput($event)" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 text-center tracking-widest" placeholder="MM/AA" maxlength="5">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">CVC</label>
+                    <input type="text" formControlName="cardCvc" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50 text-center tracking-widest" placeholder="123" maxlength="4">
+                  </div>
+                </div>
+                <p class="text-xs text-gray-400 flex items-center gap-1">🔒 Tus datos se envían cifrados directamente a Wompi.</p>
+              </div>
+            }
+
+            <!-- NEQUI Fields -->
+            @if (selectedPaymentMethod() === 'NEQUI') {
+              <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Número Nequi</label>
+                  <input type="tel" formControlName="nequiPhone" class="w-full bg-white border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C4735B]/50" placeholder="300 123 4567" maxlength="10">
+                  @if (checkoutForm.get('nequiPhone')?.touched && checkoutForm.get('nequiPhone')?.invalid) {
+                    <span class="text-red-500 text-xs">Número Nequi válido requerido (10 dígitos)</span>
+                  }
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p class="text-blue-700 text-sm font-medium"><img src="assets/nequi-icono.png" alt="Nequi" class="w-5 h-5 inline-block -mt-1 mr-1">Recibirás una notificación en tu app Nequi para confirmar el pago.</p>
+                </div>
+              </div>
+            }
+
+            <!-- BANCOLOMBIA Fields -->
+            @if (selectedPaymentMethod() === 'BANCOLOMBIA_TRANSFER') {
+              <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
+                  <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-8 h-8 object-contain">
+                  <div>
+                    <p class="font-bold text-[#3A4A3A] text-sm">Transferencia Bancolombia</p>
+                    <p class="text-xs text-gray-600 mt-1">Serás redirigido a Bancolombia para completar tu pago desde tu cuenta de ahorros o corriente.</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Error Message -->
+          @if (paymentError()) {
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 animate-fade-in">
+              <p class="text-red-600 text-sm font-bold">❌ {{ paymentError() }}</p>
+            </div>
+          }
+
+          <!-- Submit Button -->
+          <button type="submit" [disabled]="!isFormValid() || isProcessing()" class="w-full bg-[#5C2E35] text-white py-4 rounded-xl font-black text-lg shadow-xl hover:bg-[#7A3B44] transition-all transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wide">
+            @if (isProcessing()) {
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ processingMessage() || 'Procesando...' }}
+            } @else {
+              @if (selectedPaymentMethod() === 'CARD') { <span class="text-xl">💳</span> }
+              @else if (selectedPaymentMethod() === 'NEQUI') { <img src="assets/nequi-icono.png" alt="Nequi" class="w-6 h-6 object-contain"> }
+              @else { <img src="assets/bancolombia-icono.png" alt="Bancolombia" class="w-6 h-6 object-contain"> }
+              Pagar {{ store.cartTotal() | currency:'$':'symbol':'1.0-0' }}
+            }
+          </button>
+          <p class="text-xs text-center text-gray-500 mt-2">Pagos seguros procesados por Wompi 🔒</p>
+        </form>
+      </div>
+    } @else {
+      <div class="bg-red-50 rounded-[2rem] p-10 text-center shadow-lg border border-red-100">
+         <div class="text-7xl mb-6">🔒</div>
+         <h3 class="text-3xl font-black text-[#3A4A3A] mb-4">Tienda Cerrada</h3>
+         <p class="text-xl text-[#4A5D4A] mb-8 max-w-lg mx-auto">
+           {{ store.storeConfig().closedMessage || 'Estamos descansando. Volvemos pronto.' }}
+         </p>
+         <button (click)="store.setView('HOME')" class="bg-[#4A5D4A] text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-[#3A4A3A] transition-all">
+            Volver al Menú
+         </button>
+      </div>
+    }
+  }
+</div>
